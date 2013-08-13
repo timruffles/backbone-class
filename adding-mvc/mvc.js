@@ -45,8 +45,8 @@
     },
     initialize: function() {
       _.bindAll(this,"render","error");
-      this.collection.bind("add remove reset change", this.render);
-      this.collection.bind("error",this.error);
+      this.listenTo(this.collection,"add remove reset change", this.render);
+      this.listenTo(this.collection,"error",this.error);
       this.render();
     },
     error: function(model,msg){

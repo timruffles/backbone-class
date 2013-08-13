@@ -98,15 +98,11 @@
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# What we'll do
+# Morning
 
 
 </script></section>
-<section data-markdown ><script type="text/template">
-#
 
-
-</script></section>
 <section data-markdown ><script type="text/template">
 # Go over
 
@@ -713,10 +709,7 @@ collection.fetch()
 # Role of router
 
 - Avoid overdependence on router
-
-- One pattern I've used is an App `ViewModel` - simply using a model to represent the state of your view.
-
-- With `ViewModel` pattern, `Router` is one input to view state - commands or loaded data could be another
+- Another `View` - input/output for user
 
 
 </script></section>
@@ -724,7 +717,6 @@ collection.fetch()
 # Router summary
 - Simple routing via hashChange or pushState
 - Routes urls and fires callbacks, with extracted params
-- Consider use case
 
 </script></section>
 <section data-markdown ><script type="text/template">
@@ -740,11 +732,195 @@ collection.fetch()
 
 
 </script></section>
+
 <section data-markdown ><script type="text/template">
-# Question time
+
+# Rebuild demo
+
+- Using what we've learnt, we'll now rebuild the demo
+
 </script></section>
 
+<section data-markdown ><script type="text/template">
 
+# Afternoon
+
+- Backbone OO
+- Parent/child relationships
+- Zombie views
+- Fetch/update patterns
+- Value objects
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Hierarchies
+
+- Our data is mostly hierarchical
+- User has many Tweets
+- We'll want to nest in BB too
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Parent/child
+
+- Goals: don't break Backbone
+- Raw objects in models do break BB
+
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Raw objects
+
+```
+var user = new User({
+  address: {street: "Back Hill"}
+})
+user.get("address").street = "fooby";
+```
+
+- No events
+- No change etc
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Use models
+
+```
+var user = new User({
+  address: new Address({
+    street: "Back Hill"
+  })
+)
+```
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# But how to use?
+
+- Law of demeter - only talk to your friends
+- To keep the code focussed, you shouldn't be dealing with parent/child at same time
+- Pass children to code that needs them
+
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Views
+
+- We'll also need to nest views
+
+- This hierarchy implies child views
+
+```
+var UserView = Backbone.View.extend({
+  initialize: function() {
+    this.addressView = new AddressView({
+      model: this.model.get("address")
+    })
+    this.children = [this.addressView]
+  }
+})
+```
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Cleaning up
+
+- Doesn't come with Backbone
+
+- Hand-roll or use plugins (covered tomorrow)
+
+
+```
+remove: function() {
+  Backbone.View.prototype.remove.call(this);
+  _.invoke(this.children,"remove")
+}
+```
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Collection views
+
+- Two ways: one top-level view, or parent/children
+- First is less code/performance, but can easily get complex
+
+
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Top-level
+
+```
+var Items = Backbone.View.extend({
+  events: {
+    // listen to events bubbling up
+    // and handle
+  }
+})
+```
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Parent-child
+
+```
+var Item = Backbone.View.extend({
+  events: {
+    // listen to events & we know its for this view's .model
+  }
+})
+var Items = Backbone.View.extend({
+  render: function() {
+    var frag = document.createDocumentFragment();
+    this.collection.forEach(function(model) {
+      var v = new this.ChildView({model: model})
+      frag.appendChild(v.el)
+    },this)
+    this.el.appendChild(frag)
+  },
+  ChildView: Item
+})
+```
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Zombie views
+
+- Situation when a view is still referred to
+- Most often in an event handler
+- Event handlers need a reference to the thing to inform
+
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+- One pattern I've used is an App `ViewModel` - simply using a model to represent the state of your view.
+
+- With `ViewModel` pattern, `Router` is one input to view state - commands or loaded data could be another
+</script></section>
 
 </div>
 </div>
