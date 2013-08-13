@@ -2,7 +2,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>INTRODUCTION TO BACKBONE.JS AND WEB APPS BOOTCAMP</title>
+    <title>Introduction to Backbone.js and Web-apps Bootcamp</title>
   
     <link rel="stylesheet" href="reveal/css/reveal.min.css">
     <link rel="stylesheet" href="reveal/css/theme/beige.css" id="theme">
@@ -75,6 +75,7 @@
 
 # Other
 
+- Skimlinks Google-analytics alike
 - Chrome extensions
 - Mobile games with PhoneGap
 
@@ -106,6 +107,7 @@
 <section data-markdown ><script type="text/template">
 # Go over
 
+- MVC
 - Bird's eye view of a Backbone app
 - Models
 - Views
@@ -114,29 +116,7 @@
 
 </script></section>
 
-<section data-markdown ><script type="text/template">
-# Backbone apps
-- Are primarily divided between `Models` and `Views`
 
-- Are primarily driven by events from the `Models` when they change
-
-- Handle all user interaction in their `Views`
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Bird's eye view
-
-- What you are doing for a user lives in your `Models`
-
-- How you interact with the user lives in `Views`
-
-- You talk to servers via `Backbone.sync`
-
-- You make your app feel like a website with `Router`
-
-
-</script></section>
 <section data-markdown ><script type="text/template">
 # Key terms
 - Domain
@@ -173,6 +153,61 @@
 or £500
 
 or 500 friends.
+
+</script></section>
+
+
+<section data-markdown ><script type="text/template">
+# Model view controller
+
+- Model the process you're carrying out
+- View the state of that process
+- Controller glues model to view
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# MVC
+
+- Is an organisation pattern
+- Doesn't require actual 'Model' classes to subtypes
+- Can just have objects carrying out the roles
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Core loop & concept
+
+- Events on model require update view
+- Events on view may change the model
+- Core idea: presentation/domain separation
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+# Backbone apps
+- Are primarily divided between model and view
+
+- Are primarily driven by events from the `Models` when they change
+
+- Handle all user interaction in their `Views` - which are controller/view hybrids
+
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+# Bird's eye view
+
+- What you are doing for a user lives in your `Models`
+
+- How you interact with the user lives in `Views`
+
+- You talk to servers via `Backbone.sync`
+
+- You make your app feel like a website with `Router`
+
 
 </script></section>
 <section data-markdown ><script type="text/template">
@@ -748,6 +783,59 @@ collection.fetch()
 - Zombie views
 - ViewModels
 - ValueObjects
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Backbone OO
+
+- Has classic-style inheritance
+- `extend` can be used for as many levels as you like (ideally 1)
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+# constructor vs initialize
+
+- `initialize` is the userland constructor
+- Your Backbone object will have been setup
+- `constructor` is the raw consturctor
+- You'll need to ensure you Backbone's setup too
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Dependencies
+
+- Pass as much into constructor as possible
+- Reference other types as `prototype` properties
+
+```
+var TypeA = BB.extend({
+  TypeB: TypeB
+})
+```
+
+- Can now be easily tested/overriden
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Don't mix definition with creation
+
+- No type should have references to instances
+
+```
+View.extend({
+  el : "#something"
+})
+```
+
+- Untestable, need to have fixtures etc
+- Much better to pass in
 
 </script></section>
 
