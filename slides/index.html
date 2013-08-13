@@ -561,8 +561,6 @@ Logger = View.extend({
 
 - I'd recommend Mustache or other code-free templates.
 
-- Too much to go into depth.
-
 - Ideally load templates via `require.js` or similar
 
 
@@ -748,8 +746,8 @@ collection.fetch()
 - Backbone OO
 - Parent/child relationships
 - Zombie views
-- Fetch/update patterns
-- Value objects
+- ViewModels
+- ValueObjects
 
 </script></section>
 
@@ -911,15 +909,95 @@ var Items = Backbone.View.extend({
 - Situation when a view is still referred to
 - Most often in an event handler
 - Event handlers need a reference to the thing to inform
-
+- Use `listenTo`
 
 </script></section>
 
 <section data-markdown ><script type="text/template">
 
-- One pattern I've used is an App `ViewModel` - simply using a model to represent the state of your view.
+# View with state
 
-- With `ViewModel` pattern, `Router` is one input to view state - commands or loaded data could be another
+- Models hold state, but views can have state
+- Sorting, undo, demo etc is not our domain
+- Use `ViewModel`s
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# View models
+
+- Hold complex view state
+- View listens to them and updates
+- An in-code representation of what user sees
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# ValueObjects
+
+- Lots of entities in our code don't have a specific identity
+- `1 + 1` doesn't change either number
+- ValueObjects change atomically - de-nests changes to nested entities
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# With models
+
+- Set a new version of ValueObject rather than altering current
+- Useful to use a plugin or custom extension (tomorrow)
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Pub/sub
+
+- Rather than having direct references to components, listen for messages
+- Publisher pushes interesting info
+- Subscriber updates on it
+- Decouples code
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Example
+
+- These two components are decoupled - no direct knowledge
+
+```
+var bus = _.extend({},Backbone.Events);
+
+var viewA = new ViewA({bus: bus})
+var viewB = new ViewB({bus: bus})
+
+// inside ViewA
+this.listenTo(this.bus,"something",this.handler,this)
+
+// inside ViewB
+this.bus.trigger("something")
+```
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+# Refactor demo with advanced techniques
+
+- We'll rebuild with a really OTT framework
+- Use all the techniques that allow scaling up
+</script></section>
+
+<section data-markdown ><script type="text/template">
+# Tomorrow
+
+- AM: Testing
+
+- PM: Plugins & extension
+
 </script></section>
 
 </div>
