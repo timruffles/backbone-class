@@ -24,6 +24,18 @@ suite("Exercise",function() {
     // write test to expect a validation
   })
 
+  suite("calculations", function() {
+    beforeEach(function() {
+      exercise.set({reps: 5, sets: 5})
+    })
+    test("volume",function() {
+      assert.equal( 25, exercise.volume() )
+    })
+    test("suggested % of RM",function() {
+      assert.near( 0.95, exercise.suggestedRm(), 0.05, "rm not accurate" )
+    })
+  })
+
   // these tests are repetitive, how could we abstract?
 
 })

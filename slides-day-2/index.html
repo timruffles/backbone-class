@@ -28,894 +28,340 @@
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Hello
+# Day 2
 
-- I'm Tim Ruffles
-- [github.com/timruffles/backbone-ga-class/tree/bootcamp](https://github.com/timruffles/backbone-ga-class/tree/bootcamp)
-- Example code up above - clone with `git`
-- Includes this presentation
+```
+git pull origin bootcamp
+```
+
+- Might be worth creating a branch for your work
+
 
 </script></section>
+
 <section data-markdown ><script type="text/template">
 
-# Structure of the class
+# Final day's sessions
 
 <table>
   <tr>
-    <td>Today AM:</td><td> Basic MVC & Backbone</td>
+    <td>AM:</td><td>Testing</td>
   </tr>
   <tr>
-    <td>Today PM:</td><td>Backbone in production, small application</td>
-  </tr>
-  <tr>
-    <td>Tomorrow AM:</td><td>Testing</td>
-  </tr>
-  <tr>
-    <td>Tomorrow PM:</td><td>Plugins, extend and test application</td>
+    <td>PM:</td><td>Plugins, extend and test application</td>
   </tr>
 </table>
 
 
 </script></section>
+
 <section data-markdown ><script type="text/template">
-# Things I've done with Backbone
+# Tests are great
+
+- confidence
+- user confidence - no regressions
+- change fearlessly
+- collaboration
+- drudge work
+- no code rot
 
 </script></section>
-<section data-markdown ><script type="text/template">
-# Real time games
-![Picklive](img/picklive.png)
 
-</script></section>
-<section data-markdown ><script type="text/template">
-# Twitter client
-![Teach the bird](img/teach.png)
-
-</script></section>
 <section data-markdown ><script type="text/template">
 
-# Other
+# Confidence
 
-- Skimlinks Google-analytics alike
-- Chrome extensions
-- Mobile games with PhoneGap
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Backbone is
-- structure for your app
-- the boring bits of MVC written for you
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# What Backbone is not
-- A DOM Library
-- An AJAX library
-- Big: ~1000, well documented, lines of code (read it)
-- Tied to jQuery (can use Zepto for mobile, Ender, whatever w/adapters)
-- A framework (Dojo, Ext.JS), AKA everything++
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Morning
+- How can you know something works?
+- Code, alt-tab browser, code etc
+- change: you're unsure
+- test suite covers everything - no whack-a-mole
 
 
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Go over
 
-- MVC
-- Bird's eye view of a Backbone app
-- Models
+# User confidence
+
+- Regressions sap confidence
+- Don't let your users be your quality-assurance
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Change fearlessly
+
+- it's easy to break code while refactoring
+- if you test behaviour, not implementation, implementation can change
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Collaboration
+
+- It's even easier to break other peoples' code
+- Tests can ensure merges were good, and both sets of functions still work
+- Documents how a module is to be used
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Remove drudge work
+
+- Manually testing is silly, we're automaters
+- Testing on IE6, IE7 ...
+- Running test suite on every little change - humans are bad at this
+
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Code rot
+
+- Tests let you quickly get up to speed
+- You have some running code by definition
+- Documents intent
+- Ensures you can change code you don't fully understand
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# How to test
+
+- We test the code has the correct behaviour
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Behaviour
+
+- what the code does for the outside world
+- the rest of your code
+- or the public API you've documented and exposed
+- effect, not the cause
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Implementation
+
+- How the code does it
+- Internal API, private
+- Behaviour: "adds class to DOM element"
+- Implementation: "uses element.classList.add()"
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Behaviour example
+
+- We're just talking about the work our function does
+
+```
+highlightElement(el)
+assert.true( el.classList.has("highlit") )
+```
+
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Implementation example
+
+- Here we're ensuring that the work was done in a certain way
+
+```
+var classListAddWasCalled = false
+el.classList.has = function() {
+  classListAddWasCalled = true
+}
+highlightElement(el)
+assert.true( classListAddWasCalled )
+```
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Why behaviour?
+
+- Implementation is fragile - changeable
+- We only care that the module's work is done, not how
+- Lets us refactor without breaking tests
+- Avoids over-testing - we can cover implementation by testing behaviour
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# What do we test in Backbone?
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Everything!
+
+- Models & Collections
 - Views
-- Sync
-- Routing
-
-</script></section>
-
-
-<section data-markdown ><script type="text/template">
-# Key terms
-- Domain
-- Model
-- State
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Domain
-- The 'problem' this app is solving for its users.
-"a specified sphere of activity or knowledge"
-
-- Everything users care about - their current score, their bank balance.
-
-- All the rules, logic and constraints around this.
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Model
-- The representation of our domain in code.
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# State
-
-- What has happened in the domain.
-- In the domain, you now have have 
-
-
-500 points
-
-or £500
-
-or 500 friends.
-
-</script></section>
-
-
-<section data-markdown ><script type="text/template">
-# Model view controller
-
-- Model the process you're carrying out
-- View the state of that process
-- Controller glues model to view
+- Router
+- Sync extensions
 
 </script></section>
 
 <section data-markdown ><script type="text/template">
 
-# MVC
-
-- Is an organisation pattern
-- Doesn't require actual 'Model' classes to subtypes
-- Can just have objects carrying out the roles
+# How do we test?
 
 </script></section>
 
 <section data-markdown ><script type="text/template">
 
-# Core loop & concept
+# We write code to test code
 
-- Events on model require update view
-- Events on view may change the model
-- Core idea: presentation/domain separation
-
-</script></section>
-
-<section data-markdown ><script type="text/template">
-# Backbone apps
-- Are primarily divided between model and view
-
-- Are primarily driven by events from the `Models` when they change
-
-- Handle all user interaction in their `Views` - which are controller/view hybrids
-
+- Write test cases in suites
+- Each unit test tests an 'atom' of functionality
+- Write assertions that cause failing tests
+- A test runner runs our tests, reports on failures
 
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Bird's eye view
 
-- What you are doing for a user lives in your `Models`
+# Unit tests
 
-- How you interact with the user lives in `Views`
-
-- You talk to servers via `Backbone.sync`
-
-- You make your app feel like a website with `Router`
-
+- Smallest tests
+- In isolation - one function, class, or module
+- Ensure your app works bottom-up
 
 </script></section>
+
 <section data-markdown ><script type="text/template">
-# What does Backbone do?
-- Domain & state lives in Model
-- View present and allows user to interact state
-- Sync saves state
-- Router navigates state (for browser apps)
+
+# Functional tests
+
+- AKA 'integration tests'
+- Ensure modules work together
+- Can be full-stack
+- Test your view's interaction with models
 
 </script></section>
-<section data-markdown ><script type="text/template">
-# First up: Model aka Brain
-![Brain](img/brain.gif)
 
+<section data-markdown ><script type="text/template">
+
+# Our test runner
+
+- Karma - from Angular.js team
+- Allows testing on real browsers
+- Simultaenous tests on different browsers
+- Headless testing via phantomjs
+- Auto test on changes
 
 </script></section>
-<section data-markdown ><script type="text/template">
-# Models
-- Code handelling the real world processes your app represents or constitues.
 
+<section data-markdown ><script type="text/template">
+
+# Our assertion library
+
+- chai
+- has multiple UIs
+- can be used for node too
+- we'll be using simplest - chai.assert
+- self-documenting 
 
 </script></section>
-<section data-markdown ><script type="text/template">
-# Our example app
 
-- Weight training planner.
-- Very simple domain - exercises are 1-20 sets of 1-20 reps.
+
+<section data-markdown ><script type="text/template">
+
+# Our test framework
+
+- mocha
+- has multiple UIs
+- can be used for node too
+- we'll be using simplest - mocha.tdd
+- use it with an assertion library
 
 </script></section>
-<section data-markdown ><script type="text/template">
-# Our `Model`
-- sets attribute
-- reps attribute
-- validation: both present, both 1-20
 
-</script></section>
 <section data-markdown ><script type="text/template">
-# Model
+
+# Getting setup
+
+- Install node via installer from [nodejs.org](http://nodejs.org)
+- Install karma & deps as global module
+
 ```
-Exercise = Model.extend({
-  url: function() {
-    return "/exercise" + (this.isNew() ? "s" : "/" + this.id);
-  },
-  validate: function(attrs) {
-    attrs.sets = parseInt(attrs.sets)
-    attrs.reps = parseInt(attrs.reps)
-    var errors = []
-    if(attrs.sets > 20 || attrs.sets < 1) errors.push("sets must be between 1-20");
-    if(attrs.reps > 20 || attrs.reps < 1) errors.push("reps must be between 1-20");
-    if(errors.length > 0) {
-      return "Exercise item invalid: " + errors.join(" and ") + ".";
-    }
-  }
-});
+npm install --global karma
+npm install --global karma-mocha
+npm install --global karma-chrome-launcher
 ```
 
 
 </script></section>
+
 <section data-markdown ><script type="text/template">
-# Get a lot for free
 
-Didn't have to:
+# Running tests
 
-- specify fields (public var int sets, no thanks)
-- specify setters/getters
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Key: get/set/on
-```
-model.set({sets:12,reps:12})
-model.get("sets") // 12
-
-model.on("change:sets",function(model,sets) {
-  console.log("Sets changed to ",sets)
-})
-```
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Set, get and on - core of Model
-
-- Get/set gives us an encapusalted set of attributes.
-- We get notified whenever they change via `Backbone.Events`' `on` method.
-```
-
-model.on("change:SOMETHING",function(THE_MODEL,THE_NEW_VALUE) {
-  /* do something */
-  var previousValue = model.previous("SOMETHING");
-})
-```
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Previous
-
-- Give us access to previous value of a changed attribute in any `change` callback.
-
-- Useful for dealing with transitions between state.
-```
-var previousValue = model.previous("SOMETHING");
-```
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Knowledge of domain
-
-- Models are smart - here they know everything about what an exercise needs.
-
-- We don't want this knowledge anywhere else.
-
-- Model owns its state, and rules will always be applied when it wants them to.
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Example - validation
-```
-Exercise = Model.extend({
-  validate: function(attrs) {
-    attrs.sets = parseInt(attrs.sets)
-    attrs.reps = parseInt(attrs.reps)
-    var errors = []
-    if(attrs.sets > 20 || attrs.sets < 1) errors.push("sets must be between 1-20");
-    if(attrs.reps > 20 || attrs.reps < 1) errors.push("reps must be between 1-20");
-    if(errors.length > 0) {
-      return "Exercise item invalid: " + errors.join(" and ") + ".";
-    }
-  }
-});
-```
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# SPOT
-
-- One place to define/enforce good states for exercise
-
-- Single point of truth - SPOT
-```
-exercise.set({sets:-10}) // will fail, no matter where it's called from
-```
-
-
-- VS `non_mvc`, where we manually ensure modification to model occurs with correct domain rules.
-```
-form.submit(function(evt) {
-  var errors = validateExercise(data);
-})
-/* ... */
-list.on("submit","form",function(evt) {
-  var errors = validateExercise(data);
-})
-```
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Collections
-
-- Simple - a one or models.
-
-- Useful collection events: `add`, `remove`, `reset`.
-
-- Also delegates all model events:
-```
-exerciseList.on("change:sets",function(model,newValue,collection) {
-  /* */
-});
-```
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Useful domain tasks
-- Keep in a certain order: comparator on Model
-- Has all of underscore.js's great methods
-- You can include, shuffle, pluck, reduce (JS 1.8.x method).
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Proactive - model drives the app
-
-- Drive your app by listening to events on your `Models` and `Collections`.
+- Navigate to `test-skeleton`
+- Run the following to start with auto-watcher
 
 ```
-model.on("error")
-model.on("change:X")
-model.on("domainSpecificEvent")
-
-collection.on("add")
-collection.on("remove")
-collection.on("reset")
-collection.on("ANY_MODEL_EVENT_DELEGATED")
+karma start
 ```
 
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Model summary
-- Hold all domain knowledge
-- Use events to react to changes in domain state
-- Validate method to keep our domain in good shape
-- Use collections to deal with >1 model
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Next - the dumb view
-![Gump](img/gump.jpeg)
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Views
-
-- The frontman - making noise, keeping users entertained.
-
-- Dumb - no domain knowledge, has to be told to do everything by the model.
-
-- Igor to model's Dr Frankestein, Pinky to Brain, George Bush to Dick Chaney.
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Free goodies from Backbone
-
-- Don't faff around manually creating events, let Backbone do it for you:
-```
-ExerciseList = View.extend({
-  // "EVENT SELECTOR(s)": "METHOD_NAME"
-  events: {
-    "click .remove": "remove",
-    "submit #exercises form": "update",
-    "submit": "create"
-  }
-})
-```
-
-
-- Will create event delegation on the `View`'s `el`.
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# El what?
-
-- `el` is to DOM element a view owns.
-
-- You pop a view into the DOM by putting the `el` into the DOM.
-
-- It is created with the view, before the `initialize` method is called.
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Events roundup
-- Defined in events object
-- Bound before initialize via delegation
-- Therefore change the DOM inside as much as you like, just don't change el
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Other boring bits you don't need to do
-```
-View.extend({
-  id: "exercise-list", // id for el
-  className: "panel mobile", // class names for el
-  tagName: "ul" // type of element el will be, defaults to div
-  attrs: { // attributes to set on el
-    draggable: true
-  }
-})
-```
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Other key bits
-```
-ExerciseList = View.extend({
-  initialize: (options) {
-    if(!this.model || !this.collection || !this.el) {
-      throw "Never happens - all assigned for you already from options");
-    }
-    this.$el.fadeIn() // a pre-DOM-library-wrapped pointer to el
-    this.$(".exercises") // and a selector with context preset to el
-  }
-})
-new ExerciseList({
-  model: user,
-  collection: exercises
-})
-// no errors!
-```
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Don't do and then
-
-- Don't do and then, do and rely on defined callbacks
-
-- Don't manipulate model state like:
-```
-team.addPlayer(player) // change state
-this.render() // update view
-```
-
-
-- What happens when someone else changes the domain in the same way?
-
-- We would still want the `View` or other code to react in the same way.
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Always listen to the model, it's smart
-
-- Smart models, dumb views, happy apps.
+- Should see some passing and failing tests
 
 ```
-ExerciseList = View.extend({
-  _.bindAll(this,"render","error");
-  this.collection.bind("add remove reset change", this.render);
-  this.collection.bind("error",this.error);
-  this.render();
-})
+Chrome 28.0.1500 (Mac OS X 10.7.5) Exercise validates reps FAILED
+	expected null to be truthy
+	AssertionError: expected null to be truthy
+Chrome 28.0.1500 (Mac OS X 10.7.5) Exercise validates sets FAILED
+	expected null to be truthy
+	AssertionError: expected null to be truthy
+Chrome 28.0.1500 (Mac OS X 10.7.5): Executed 3 of 3 (2 FAILED) (0.179 secs / NaN secs)
 ```
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# View not limited to DOM
-```
-SpaceInvadersRenderer = View.extend({
-  initialize: function() {
-    _.bindAll(this,"render")
-    this.ctx = this.el.getContext("2d");
-    window.requestAnimationFrame(this.render);
-  }
-})
-```
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Sound
-```
-Sound = View.extend({
-  initialize: function(opts) {
-    /* assignment */
-    this.match.on("start",_.bind(this,this.play,"whistle"))
-    this.events.on("foul",this.randomGroan)
-    this.events.on("goal",this.randomCheer)
-  }
-})
-```
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Logging
-```
-Logger = View.extend({
-  initialize: function(opts) {
-    /* assignment */
-    this.user.on("all",this.userAudit)
-    this.songs.on("all",this.songAudit)
-  }
-})
-```
-
-
-- Logging is likely non-domain, makes sense to keep it as a 'view' of it instead.
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Templates
-
-- Easiest way to write DOM.
-
-- I'd recommend Mustache or other code-free templates.
-
-- Ideally load templates via `require.js` or similar
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Templates are easy
-
-- Very simple - I define:
-
-- A `transform` function that makes a JSON representation of the `Views` model
-
-- A `render` function like that passes it to template
-```
-transform = function() {
-  // an object
-}
-render = function() {
-  this.el.innerHTML = Mustache.to_html(this.template,this.transform())
-}
-```
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# View summary
-- Dumb
-- Reactive - never update model and then
-- Use templates for DOM
-- Not tied to DOM - any non-domain representation of model
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Sync
-
-- If we can't store the state of our domain, we don't really have much of an app.
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Backbone sync
-```
-Backbone.sync = function(method,model,options) {
-  /* default REST implementation */
-}
-```
-
-
-- One signature, many potential implementations.
-- Not limited to REST verbs - I've used keepUpdated for Pusher/Polling
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Switch on context
-```
-Model.extend({
-  sync: (method) {
-    if(method == "keepUpdated") {
-      Pusher.sync.apply(Pusher,arguments);
-    } else {
-      Backbone.sync.apply(Backbone,arguments);
-    }
-  }
-})
-```
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Overriding encouraged
-
-- Very simple to override - without legacy is ~10 lines of code.
-
-- Default is REST with all heavy lifting done by DOM library.
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Drives persistance of Model
-```
-model.fetch() // Backbone.sync("read",model,options)
-
-// save method depends on model.isNew()
-// Backbone.sync("create OR update",model,{success,error})
-model.save({someUpdate:"toAttributes"},{
-  success: function() ...
-  error: function()..
-})
-
-// Backbone.sync("delete",model,options)
-model.destroy()
-```
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# And Collection
-```
-// same as model.save() on new model
-collection.create(attributes,{
-  wait: true // don't add to collection till server OKs
-})
-
-// Backbone.sync("read",collection,options)
-collection.fetch()
-```
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Sync summary
-- Keep all persistance implementation here
-- Implementation behind Model's persistance methods
-- REST implementation free, easy to implement yourself
-- Inspiringly simple piece of API design - like lego
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Routing
-
-- Triggers callbacks when URL matches certain patterns.
-
-- Can extract paramters from URL via `:paramName` in routes
-
-- Converted to regex internally
-```
- var AppRouter = Backbone.Router.extend({
-    routes: {
-      "": "list",
-      "exercises/:id": "show"
-    },
-    list: function() {
-    },
-    show: function(id) {
-    }
-  });
-
-  var router = new AppRouter()
-  Backbone.history.start({pushState:true});
-```
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Role of router
-
-- Avoid overdependence on router
-- Another `View` - input/output for user
-
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Router summary
-- Simple routing via hashChange or pushState
-- Routes urls and fires callbacks, with extracted params
-
-</script></section>
-<section data-markdown ><script type="text/template">
-# Backbone roundup
-
-- What you are doing for a user lives in your `Models`
-
-- How you interact with the user lives in `Views`
-
-- You talk to servers via `Backbone.sync`
-
-- You make your app feel like a website with `Router`
-
 
 </script></section>
 
 <section data-markdown ><script type="text/template">
 
-# Rebuild demo
+# The testing loop
 
-- Using what we've learnt, we'll now rebuild the demo
-
-</script></section>
-
-<section data-markdown ><script type="text/template">
-
-# Afternoon
-
-- Backbone OO
-- Parent/child relationships
-- Zombie views
-- ViewModels
-- ValueObjects
+- Consider the behaviour you want
+- Write a test that documents the behaviour
+- Make sure it fails
+- Then make it pass
+- If retro-test, ensure break test to avoid false-positives
 
 </script></section>
 
 <section data-markdown ><script type="text/template">
 
-# Backbone OO
+# Our first unit test
 
-- Has classic-style inheritance
-- `extend` can be used for as many levels as you like (ideally 1)
-
-</script></section>
-
-<section data-markdown ><script type="text/template">
-# constructor vs initialize
-
-- `initialize` is the userland constructor
-- Your Backbone object will have been setup
-- `constructor` is the raw consturctor
-- You'll need to ensure you Backbone's setup too
-
-</script></section>
-
-<section data-markdown ><script type="text/template">
-
-# Dependencies
-
-- Pass as much into constructor as possible
-- Reference other types as `prototype` properties
+- Testing our validation
+- We set reps, and ensure it is validated
 
 ```
-var TypeA = BB.extend({
-  TypeB: TypeB
-})
-```
+suite("Exercise",function() {
+  test("validates reps", function() {
+    var exercise = new Exercise()
+    exercise.set("sets",0)
+    exercise.isValid()
 
-- Can now be easily tested/overriden
-
-</script></section>
-
-<section data-markdown ><script type="text/template">
-
-# Don't mix definition with creation
-
-- No type should have references to instances
-
-```
-View.extend({
-  el : "#something"
-})
-```
-
-- Untestable, need to have fixtures etc
-- Much better to pass in
-
-</script></section>
-
-<section data-markdown ><script type="text/template">
-
-# Hierarchies
-
-- Our data is mostly hierarchical
-- User has many Tweets
-- We'll want to nest in BB too
-
-</script></section>
-
-<section data-markdown ><script type="text/template">
-
-# Parent/child
-
-- Goals: don't break Backbone
-- Raw objects in models do break BB
-
-
-</script></section>
-
-<section data-markdown ><script type="text/template">
-
-# Raw objects
-
-```
-var user = new User({
-  address: {street: "Back Hill"}
-})
-user.get("address").street = "fooby";
-```
-
-- No events
-- No change etc
-
-</script></section>
-
-<section data-markdown ><script type="text/template">
-
-# Use models
-
-```
-var user = new User({
-  address: new Address({
-    street: "Back Hill"
+    assert.ok( exercise.validationError != null )
   })
-)
-```
-
-</script></section>
-
-<section data-markdown ><script type="text/template">
-
-# But how to use?
-
-- Law of demeter - only talk to your friends
-- To keep the code focussed, you shouldn't be dealing with parent/child at same time
-- Pass children to code that needs them
-
-
-</script></section>
-
-<section data-markdown ><script type="text/template">
-
-# Views
-
-- We'll also need to nest views
-
-- This hierarchy implies child views
-
-```
-var UserView = Backbone.View.extend({
-  initialize: function() {
-    this.addressView = new AddressView({
-      model: this.model.get("address")
-    })
-    this.children = [this.addressView]
-  }
 })
 ```
 
@@ -923,43 +369,32 @@ var UserView = Backbone.View.extend({
 
 <section data-markdown ><script type="text/template">
 
-# Cleaning up
+# Time to make it pass
 
-- Doesn't come with Backbone
-
-- Hand-roll or use plugins (covered tomorrow)
-
-
-```
-remove: function() {
-  Backbone.View.prototype.remove.call(this);
-  _.invoke(this.children,"remove")
-}
-```
+- Source code is in `test-skeleton/src`
+- Tests are in `test-skeleton/test`
 
 </script></section>
 
 <section data-markdown ><script type="text/template">
 
-# Collection views
+# Removing setup
 
-- Two ways: one top-level view, or parent/children
-- First is less code/performance, but can easily get complex
-
-
-
-</script></section>
-
-<section data-markdown ><script type="text/template">
-
-# Top-level
+- use `beforeEach` to create setup before each test
+- use `before` to setup before all tests
 
 ```
-var Items = Backbone.View.extend({
-  events: {
-    // listen to events bubbling up
-    // and handle
-  }
+suite("Exercise",function() {
+  
+  var exercise;
+  beforeEach(function() {
+    exercise = new Exercise()
+  })
+
+
+  test("validates reps", function() {
+    // can see the exercise variable
+  })
 })
 ```
 
@@ -967,24 +402,20 @@ var Items = Backbone.View.extend({
 
 <section data-markdown ><script type="text/template">
 
-# Parent-child
+# Giving context
+
+- group related tests
+- have granular setup methods for those tests
 
 ```
-var Item = Backbone.View.extend({
-  events: {
-    // listen to events & we know its for this view's .model
-  }
-})
-var Items = Backbone.View.extend({
-  render: function() {
-    var frag = document.createDocumentFragment();
-    this.collection.forEach(function(model) {
-      var v = new this.ChildView({model: model})
-      frag.appendChild(v.el)
-    },this)
-    this.el.appendChild(frag)
-  },
-  ChildView: Item
+suite("calculations", function() {
+  beforeEach(function() {
+    // builds on original context
+    exercise.set({reps: 5, sets: 5})
+  })
+  test("volume",function() {
+    // test within the context
+  })
 })
 ```
 
@@ -992,101 +423,181 @@ var Items = Backbone.View.extend({
 
 <section data-markdown ><script type="text/template">
 
-# Zombie views
+# Mocking and stubbing
 
-- Situation when a view is still referred to
-- Most often in an event handler
-- Event handlers need a reference to the thing to inform
-- Use `listenTo`
-
-</script></section>
-
-<section data-markdown ><script type="text/template">
-
-# View with state
-
-- Models hold state, but views can have state
-- Sorting, undo, demo etc is not our domain
-- Use `ViewModel`s
+- Mocks enforce a method being called
+- Use mocks when the behaviour is calling a method
+- Stubs let you fake implementation - e.g a slow database call
+- Use stubs when the method is not the behaviour being tested
 
 </script></section>
 
 <section data-markdown ><script type="text/template">
 
-# View models
+# Mock & stub library: sinon
 
-- Hold complex view state
-- View listens to them and updates
-- An in-code representation of what user sees
-
-</script></section>
-
-<section data-markdown ><script type="text/template">
-
-# ValueObjects
-
-- Lots of entities in our code don't have a specific identity
-- `1 + 1` doesn't change either number
-- ValueObjects change atomically - de-nests changes to nested entities
+- node & browser
+- has stubs and mocks
+- spys are low level tool to create
+- also has a fake-server for API testing
 
 </script></section>
 
 <section data-markdown ><script type="text/template">
 
-# With models
+# Plugins
 
-- Set a new version of ValueObject rather than altering current
-- Useful to use a plugin or custom extension (tomorrow)
-
-</script></section>
-
-<section data-markdown ><script type="text/template">
-
-# Pub/sub
-
-- Rather than having direct references to components, listen for messages
-- Publisher pushes interesting info
-- Subscriber updates on it
-- Decouples code
+- Backbone is small
+- Lots of common patterns
+- Plugins let you avoid re-writing, and use tested code
 
 </script></section>
 
 <section data-markdown ><script type="text/template">
 
-# Example
+# Require.js
 
-- These two components are decoupled - no direct knowledge
+- modules for Javascript
+- designed for browser
+- asynchronous - can load in on demand
+
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+# define
+
+- defines a module
+- has dependencies on other modules
+- return the thing you're defining
 
 ```
-var bus = _.extend({},Backbone.Events);
+define(["some/module","another/module",function(SomeModule,AnotherModule) {
+  var MyModule = {};
+  return MyModule;
+})
+```
+</script></section>
 
-var viewA = new ViewA({bus: bus})
-var viewB = new ViewB({bus: bus})
+<section data-markdown ><script type="text/template">
 
-// inside ViewA
-this.listenTo(this.bus,"something",this.handler,this)
+# require
 
-// inside ViewB
-this.bus.trigger("something")
+- when you're using modules not defining - e.g init scripts
+
+```
+require(["views/app","router"],function(AppView,Router) {
+  // kick off application
+})
 ```
 
 </script></section>
 
-<section data-markdown ><script type="text/template">
-# Refactor demo with advanced techniques
 
-- We'll rebuild with a really OTT framework
-- Use all the techniques that allow scaling up
+<section data-markdown ><script type="text/template">
+
+# Has optimiser
+
+- build up a whole script
+- looks at all the dependencies and builds into one
+- can split out into layers to lazy-load
+- e.g highcharts loaded only when we have graphs
+
+</script></section>
+<section data-markdown ><script type="text/template">
+
+# Backbone.Marionette
+
+- Plugins for common patterns
+- e.g CollectionView
+- You'll probably build something like it if you don't use
+
+</script></section>
+<section data-markdown ><script type="text/template">
+
+# Regions
+
+- Way of having one DOM element you can switch views in and out of
+- e.g tabs, or top-level views for routing
+
+</script></section>
+<section data-markdown ><script type="text/template">
+
+# CollectionView
+
+- Define an `itemView` property
+- Handles adding/removing etc
+
+```
+var ItemView = Backbone.Marionette.ItemView.extend({
+  template: getTemplate("some-item")
+});
+
+var CollectionView = Backbone.Marionette.CollectionView.extend({
+  itemView: ItemView
+});
+```
+
+
+</script></section>
+<section data-markdown ><script type="text/template">
+
+# Region
+
+- Manages an el
+- Can switch views in/out
+
+```
+var stage = new Backbone.Marionette.Region({
+  el: this.$("#mainStage")
+});
+stage.show(exercises)
+```
+
+</script></section>
+<section data-markdown ><script type="text/template">
+
+# EventAggregator
+
+- pub/sub
+- really simple to build your own
+
+```
+var pubSub = _.extend({},Backbone.Events)
+```
+
+- use to decouple components - they just share the pubSub component
+
+
+</script></section>
+<section data-markdown ><script type="text/template">
+
+# Extending Backbone
+
+- Sync is simple
+- Extending Model or View requires you know about `call`, `apply` and `prototype`
+
+</script></section>
+<section data-markdown ><script type="text/template">
+
+# Adding a localStorage sync
+
+- Override sync for a single model
+- Implement each of the verbs
+
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Tomorrow
 
-- AM: Testing
+# Showtime!
 
-- PM: Plugins & extension
+- Make our application use all the things
+- Test drive some new functionality
+- Use regions, CollectionView etc to clean up the app
+- Use localStorage sync to store user preferences
 
 </script></section>
+
 
 </div>
 </div>

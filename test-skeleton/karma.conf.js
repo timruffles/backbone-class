@@ -5,6 +5,7 @@ module.exports = function(config) {
     frameworks: ['mocha'],
     // list of files / patterns to load in the browser
     files: [
+      'test/sinon.js',
       'test/chai.js',
       'test/custom_assertions.js',
       'test/setup.js',
