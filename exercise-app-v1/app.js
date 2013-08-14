@@ -117,10 +117,16 @@
 			this.exercises = new Exercise.Collection();
       this.exercises.fetch();
 
+      this.pubSub = this.options.pubSub;
+
       this.stage = new Backbone.Marionette.Region({
         el: document.createElement("div")
       })
       this.$el.append(this.stage.el)
+
+      this.pubSub.on("route:home",this.home,this)
+      this.pubSub.on("route:exercise",this.showExercise,this)
+      this.pubSub.on("error",this.showError,this)
 		},
 		home: function() {
 			this.showExerciseList();
@@ -150,7 +156,7 @@
 
 	var AppRouter = Backbone.Router.extend({
 		initialize: function(opts) {
-			this.appView = opts.appView
+			this.pubSub = opts.pubSub
 		},
 		routes: {
 			"": "home",
@@ -158,14 +164,13 @@
 			"*path": "unknown"
 		},
 		home: function() {
-			this.appView.home()
-			//this.appView.showExercise(parseInt(1,10))
+			this.pubSub.trigger("route:home")
 		},
 		exercise: function(id) {
-			this.appView.showExercise(parseInt(id,10))
+			this.pubSub.trigger("route:exercise",parseInt(id,10))
 		},
 		unknown: function(path) {
-			this.appView.showError({message: "I have no idea what '" + path + "' means"})
+			this.pubSub.trigger("error",{message: "I have no idea what '" + path + "' means"})
 		}
 	});
 
@@ -178,11 +183,13 @@
 		console.log("start boot");
 
 		var rootEl = document.body;
+    var pubSub = new Backbone.Wreqr.EventAggregator();
 		var app = new AppView({
-			el: rootEl
+			el: rootEl,
+      pubSub: pubSub
 		});
 		var router = new AppRouter({
-			appView: app
+      pubSub: pubSub
 		});
 		Backbone.history.start();
 
