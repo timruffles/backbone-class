@@ -10,14 +10,14 @@ suite("Exercise",function() {
     exercise.set("reps",0)
     exercise.isValid()
 
-    assert.ok( exercise.validationError )
+    assert.validationErrorFor( exercise, "reps" )
   })
 
   test("validates sets", function() {
     exercise.set("sets",0)
     exercise.isValid()
 
-    assert.ok( exercise.validationError )
+    assert.validationErrorFor( exercise, "sets" )
   })
 
   test("validates type", function() {
@@ -30,9 +30,6 @@ suite("Exercise",function() {
     })
     test("volume",function() {
       assert.equal( 25, exercise.volume() )
-    })
-    test("suggested % of RM",function() {
-      assert.near( 0.95, exercise.suggestedRm(), 0.05, "rm not accurate" )
     })
   })
 
