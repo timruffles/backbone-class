@@ -3,8 +3,8 @@ chai.use(function(chai,util) {
   chai.Assertion.addMethod('validationErrorFor', function (field) {
     var model = this._obj;
     var msg = "Expected '" + field + "' to be";
-    var posMsg = msg + " valid";
-    var negMsg = msg + " invalid";
+    var posMsg = msg + " invalid";
+    var negMsg = msg + " valid";
     if(!this.negate) {
       this.assert(
         model.validationError,
