@@ -30,6 +30,15 @@ suite("localStorageSync",function() {
     assert.equal( "tom", newInstance.get("name") )
   })
 
+  test("can update partially", function() {
+    var newInstance = new ModelWithLocalStorage({id: 10})
+    var thirdInstance = new ModelWithLocalStorage({id: 10})
+    model.save()
+    newInstance.save()
+    thirdInstance.fetch()
+    assert.equal( model.get("name"), thirdInstance.get("name") )
+  })
+
   test("can delete", function() {
     var newInstance = new ModelWithLocalStorage({id: 10})
     model.save()

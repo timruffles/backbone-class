@@ -22,6 +22,40 @@
 		}
 	});
 
+  Backbone.localStorageSync = function(method,model,options) {
+
+    switch(method) {
+      case "read":
+        var stored = localStorage[model.id]
+        if(stored) {
+          return options.success(JSON.parse(stored));
+        }
+        break;
+      case "update":
+      case "patch":
+        var toStore = model.toJSON();
+        var stored = localStorage[model.id]
+        if(stored) {
+          toStore = _.extend(JSON.parse(stored),toStore);
+        }
+        localStorage[model.id] = JSON.stringify(toStore)
+        break;
+
+      case "delete":
+        delete localStorage[model.id]
+        break;
+
+      default:
+        throw new Error("No idea how to " + method);
+    }
+
+  };
+  
+
+  var Preferences = Backbone.Model.extend({
+    sync: Backbone.localStorageSync
+  });
+
 	Exercise.Collection = Backbone.Collection.extend({
 		model: Exercise,
 		url: "/exercises"
@@ -112,6 +146,23 @@
     }
   })
 
+  var PreferencesView = Backbone.View.extend({
+    initialize: function() {
+      this.listenTo(this.model,"change:sound",this.render)
+    },
+    events: {
+      "change input": "updateSound"
+    },
+    updateSound: function() {
+      var sound = this.$("input").prop("checked");
+      this.model.save({sound: sound})
+    },
+    render: function() {
+      this.$el.html("<label>Sound</label><input type='checkbox' name=sound >")
+      this.$("input").prop("checked",this.model.get("sound"))
+    }
+  })
+
 	var AppView = Backbone.View.extend({
 		initialize: function() {
 			this.exercises = new Exercise.Collection();
@@ -119,9 +170,15 @@
 
       this.pubSub = this.options.pubSub;
 
+      this.preferencesView = new PreferencesView({
+        model: this.options.preferences
+      })
+      this.preferencesView.render()
+
       this.stage = new Backbone.Marionette.Region({
         el: document.createElement("div")
       })
+      this.$el.append(this.preferencesView.el)
       this.$el.append(this.stage.el)
 
       this.pubSub.on("route:home",this.home,this)
@@ -183,10 +240,13 @@
 		console.log("start boot");
 
 		var rootEl = document.body;
+    var preferences = new Preferences({id: "preferences"});
+    preferences.fetch();
     var pubSub = new Backbone.Wreqr.EventAggregator();
 		var app = new AppView({
 			el: rootEl,
-      pubSub: pubSub
+      pubSub: pubSub,
+      preferences: preferences
 		});
 		var router = new AppRouter({
       pubSub: pubSub
