@@ -2,10 +2,11 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>INTRODUCTION TO BACKBONE.JS AND WEB APPS BOOTCAMP</title>
+    <title>Introduction to Backbone.js</title>
   
     <link rel="stylesheet" href="reveal/css/reveal.min.css">
     <link rel="stylesheet" href="reveal/css/theme/beige.css" id="theme">
+    <link rel="stylesheet" href="style.css" id="theme">
 
     <!-- For syntax highlighting reveal/-->
     <link rel="stylesheet" href="reveal/lib/css/zenburn.css">
@@ -17,12 +18,12 @@
 <div class="slides">
 
 <section data-markdown ><script type="text/template">
-# INTRODUCTION TO BACKBONE.JS AND WEB APPS BOOTCAMP
+# Introduction to Backbone.js
 
 
 [@timruffles](http://twitter.com/timruffles)
 
-[truffles.me.uk](http://truffles.me.uk)
+[SidekickJS](https://www.sidekickjs.com)
 
 
 </script></section>
@@ -35,19 +36,16 @@
 
 
 </script></section>
-<section data-markdown ><script type="text/template">
-# Things I've done with Backbone
 
-Real time games
-![Picklive](img/picklive.png)
+<section class=gallary>
 
-Twitter client
-![Teach the bird](img/teach.png)
+<img src=img/picklive.png />
+<img src=img/teach.png />
 
-Chrome extensions
+<div class=item>Chrome Extensions</div>
 
+</section>
 
-</script></section>
 <section data-markdown ><script type="text/template">
 # Backbone is
 - structure for your app
@@ -70,11 +68,7 @@ Chrome extensions
 
 
 </script></section>
-<section data-markdown ><script type="text/template">
-#
 
-
-</script></section>
 <section data-markdown ><script type="text/template">
 # Go over
 
@@ -226,12 +220,13 @@ model.on("change:sets",function(model,sets) {
 
 </script></section>
 <section data-markdown ><script type="text/template">
+
 # Set, get and on - core of Model
 
 - Get/set gives us an encapusalted set of attributes.
 - We get notified whenever they change via `Backbone.Events`' `on` method.
-```
 
+```
 model.on("change:SOMETHING",function(THE_MODEL,THE_NEW_VALUE) {
   /* do something */
   var previousValue = model.previous("SOMETHING");
@@ -472,8 +467,8 @@ this.render() // update view
 ```
 ExerciseList = View.extend({
   _.bindAll(this,"render","error");
-  this.collection.bind("add remove reset change", this.render);
-  this.collection.bind("error",this.error);
+  this.listenTo(this.collection,"add remove reset change", this.render);
+  this.listenTo(this.collection,"error",this.error);
   this.render();
 })
 ```
@@ -500,9 +495,9 @@ SpaceInvadersRenderer = View.extend({
 Sound = View.extend({
   initialize: function(opts) {
     /* assignment */
-    this.match.on("start",_.bind(this,this.play,"whistle"))
-    this.events.on("foul",this.randomGroan)
-    this.events.on("goal",this.randomCheer)
+    this.listenTo(this.match,"start",this.play.bind(this,"whistle"))
+    this.listenTo(this.events,"foul",this.randomGroan,this)
+    this.listenTo(this.events,"goal",this.randomCheer,this)
   }
 })
 ```
@@ -695,6 +690,7 @@ collection.fetch()
 - Consider use case
 
 </script></section>
+
 <section data-markdown ><script type="text/template">
 # Backbone roundup
 
@@ -708,10 +704,175 @@ collection.fetch()
 
 
 </script></section>
+
 <section data-markdown ><script type="text/template">
 # Question time
 </script></section>
 
+
+<section data-markdown ><script type="text/template">
+
+# Advanced topics
+
+- Initialization in depth
+- Child views
+- Event-driven architecture
+- Nested models
+
+</script></section>
+
+
+
+<section data-markdown ><script type="text/template">
+
+# User experience of boot
+
+- Get a loader on screen first
+- If you need content immediately, generate some (share templates)
+- Provide immediate data in a constant
+
+```
+var BOOT_DATA = <%= some_data.to_json %>;
+```
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# The boot
+
+- Ties our nicely modular code into global environment
+
+```
+require(["v/app","vendor/underscore","vendor/backbone"],function(AppView,_,Backbone) {
+
+  var pubSub = _.extend({},Backbone.Events);
+
+  // here we provide the shared pubSub
+  // and give view its concrete dom element
+  var app = new AppView({
+    pubSub: pubSub,
+    // if we have initial boot data, the boot script
+    // is the only place we reference it, everything else is passed it
+    // model: new SomeTopLevelModel({ models: BOOT_DATA })
+    el: document.querySelector(".root")
+  })
+
+});
+```
+
+</script></section>
+
+
+
+<section data-markdown ><script type="text/template">
+
+# Child views
+
+- Marionette has plugins to do this
+- Basic idea: attach child views inside parent
+- Ensure cleanup is triggered for child views
+
+```
+var ParentView = Backbone.View.extend({
+  initialize: function() {
+    this.children = [];
+    this.childOne = new ChildView();
+    this.children.push(this.childOne);
+  },
+  render: function() {
+    this.el.appendChild(this.childOne.el)
+  },
+  remove: function() {
+    Backbone.View.prototype.remove.call(this);
+    // call remove on all children too
+    _.invoke(this.children,"remove");
+  }
+})
+```
+
+</script></section>
+
+
+<section data-markdown ><script type="text/template">
+
+# Event-driven architecture
+
+- Events are very loose coupling - no reference to implementation
+- Coupled on string events and parameters
+- Easy to test: does it react to events, does it emit the right events?
+
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Nested models
+
+- Not as useful as you'd think
+- Views should be dealing with one level of models
+- View hierarchy should be as deep as model hierchy
+- Therefore don't need nested operations
+
+
+</script></section>
+
+
+<section data-markdown ><script type="text/template">
+
+# Law of demeter
+
+- Speak to your friends only
+- Don't dig lots of levels deep to get what you need
+- Therefore: pass in dependencies, keep dependencies shallow
+- Reduces coupling, increases coherence (doing one thing well)
+
+</script></section>
+
+
+
+
+<section data-markdown ><script type="text/template">
+
+# Hierachy in models
+
+- Keep inside attributes
+- Good to keep consistency, everything accessed via `get`
+
+```
+var OuterModel = Backbone.Model.extend({
+  initialize: function() {
+  }
+})
+var model = new OuterModel({
+  someCollection: new SomeCollection(),
+  someModel: new SomeModel(),
+})
+```
+
+</script></section>
+
+
+<section data-markdown ><script type="text/template">
+
+# Value objects
+
+- Some things are values not identifiable objects
+- e.g Date, Period, Interval, Query
+- Don't change individual fields, change whole objects
+- If you're listening for lots of fields on a model & doing same thing, it could be a VO
+
+</script></section>
+
+
+<section data-markdown ><script type="text/template">
+
+# Any other questions?
+
+
+## @timruffles, @sidekicksrc
+
+</script></section>
 
 
 </div>
@@ -765,7 +926,7 @@ collection.fetch()
         { src: 'reveal/lib/js/classList.js', condition: function() { return !document.body.classList; } },
 
         // Interreveal/pret Markdown in <section> elements
-        { src: 'reveal/plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+         { src: 'reveal/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
         { src: 'reveal/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
 
         // Syntareveal/x highlight for <code> elements
