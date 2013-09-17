@@ -37,7 +37,7 @@
   ExerciseList = View.extend({
     events: {
       "click .remove": "remove",
-      "submit #exercises form": "update",
+      "submit .exercises form": "update",
       "submit": "create"
     },
     attributes: {
@@ -45,8 +45,8 @@
     },
     initialize: function() {
       _.bindAll(this,"render","error");
-      this.collection.bind("add remove reset change", this.render);
-      this.collection.bind("error",this.error);
+      this.listenTo(this.collection,"add", this.render);
+      this.listenTo(this.collection,"error",this.error);
       this.render();
     },
     error: function(model,msg){
@@ -64,19 +64,21 @@
     },
     update: function(evt) {
       evt.preventDefault();
+      evt.stopPropagation();
       var form = $(evt.currentTarget);
-      var id = form.attr("id");
+      var id = form.attr("data-id");
       this.collection.get(id).save(toJSON(form),{
         error:this.error
       });
     },
     remove: function(evt) {
       evt.preventDefault();
-      var id = $(evt.currentTarget).parent().attr("id");
+      var exercise = $(evt.currentTarget).parents(".exercise");
+      var id = exercise.attr("data-id");
       this.collection.remove(id);
-      $(evt.currentTarget).fadeOut()
-                          .promise()
-                          .then(function(eles) { $(eles).parent().remove() });
+      exercise.fadeOut()
+              .promise()
+              .then(function(eles) { exercise.remove() });
     },
     template: _.template(templates.exercises),
     exercisePartial: _.template(templates.exercise),
@@ -101,6 +103,7 @@
     initialize: function() {
       this.render();
     },
+    className: "exercise-detail row",
     attributes: {
       style: "display: none"
     },

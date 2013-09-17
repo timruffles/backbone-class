@@ -22,7 +22,7 @@
   }
 
   var addExercise = function(exercise) {
-    var el = exerciseElement().data('id',exercise.id);
+    var el = exerciseElement().attr('data-id',exercise.id);
     el.find('[name=reps]').attr('value',exercise.reps);
     el.find('[name=sets]').attr('value',exercise.sets);
     el.find('option[value='+exercise.type+']').attr('selected',true);
@@ -39,19 +39,19 @@
   $(function() {
     // pointers to existing UI
     list = $('#exercises');
-    form = $('#exerciseForm');
+    form = $('.exercise-form');
 
     // used for new exercises
-    exerciseEl = form.clone().attr('id','').append($('<span class="remove">X</span>'));
+    exerciseEl = $("<div>").append(form.clone()).append($('<div class="large-2 columns without-label"><button class="remove small button alert">Remove</button></div>'));
 
     // ui handlers
     list.delegate('.exercise .remove','click',function(evt) {
-      var exercise = $(evt.target).parent();
+      var exercise = $(evt.target).parents(".exercise");
       exercise.fadeOut()
               .promise()
-              .then(function(eles) { $(eles).parent().remove() });
+              .then(function(eles) { exercise.remove() });
       $.ajax({
-        url: '/exercise/' + exercise.id,
+        url: '/exercise/' + exercise.attr("data-id"),
         type: 'DELETE'
       }).then(function() {},function() {/* error handling */})
     });
