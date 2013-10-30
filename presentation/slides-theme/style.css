@@ -1,0 +1,45 @@
+@font-face {
+  font-family: Exo;
+  src: url(fonts/Exo-Regular.ttf)
+}
+@font-face {
+  font-family: Exo;
+  src: url(fonts/Exo-SemiBold.ttf)
+  font-weight: bold;
+}
+
+body {
+  box-sizing: border-box;
+  background: rgb(61,81,128);
+  color: #fff;
+  font-family: Exo;
+  font-size: 32px;
+}
+
+.reveal h1,.reveal h2, .reveal h3 {
+  font-weight: bold;
+  text-align: left;
+}
+
+.slides section {
+  min-height: 700px;
+}
+
+.reveal h1 {
+  font-size: 4em;
+  margin-bottom: 3rem;
+}
+
+/* overrides */
+.reveal ul {
+  display: block;
+}
+.reveal .slides p {
+  text-align: left;
+}
+.reveal pre code {
+  font-size: 1.5rem;
+  line-height: 1em;
+  padding: 0.5em;
+  max-height: none;
+}

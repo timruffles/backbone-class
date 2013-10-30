@@ -5,11 +5,10 @@
     <title>Introduction to Backbone.js</title>
   
     <link rel="stylesheet" href="reveal/css/reveal.min.css">
-    <link rel="stylesheet" href="reveal/css/theme/beige.css" id="theme">
-    <link rel="stylesheet" href="style.css" id="theme">
-
-    <!-- For syntax highlighting reveal/-->
     <link rel="stylesheet" href="reveal/lib/css/github.css">
+
+    <link rel="stylesheet" href="slides-theme/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -31,8 +30,8 @@
 <section data-markdown ><script type="text/template">
 # Hello
 
-- I'm Tim Ruffles
-- Example code up above - clone if you've `git`, or grab the `.zip`.
+- https://github.com/timruffles/backbone-ga-class
+- Code + slides up above - clone if you've got `git`, or grab the `.zip`.
 
 
 </script></section>
@@ -40,9 +39,8 @@
 <section class=gallary>
 
 <img src=img/picklive.png />
+<img src=img/skimlinks.png />
 <img src=img/teach.png />
-
-<div class=item>Chrome Extensions</div>
 
 </section>
 
@@ -58,8 +56,8 @@
 - A DOM Library
 - An AJAX library
 - Big: ~1000, well documented, lines of code (read it)
-- Tied to jQuery (can use Zepto for mobile, Ender, whatever w/adapters)
-- A framework (Dojo, Ext.JS), AKA everything++
+- Tied to jQuery
+- A framework
 
 
 </script></section>
@@ -91,22 +89,78 @@
 - Are primarily driven by events from the `Models` when they change
 
 - Handle all user interaction in their `Views`
+</script></section>
 
+<section data-markdown ><script type="text/template">
+
+# Q
+  
+- How many responsibilities does this code have?
+
+
+```javascript
+$(".update").on("submit",function() {
+  evt.preventDefault();
+  var data = toJSON(form);
+  var errors = validateExercise(data);
+  if(errors) {
+    return showErrors(errors)
+  }
+  $.ajax({
+    url:'/exercises',
+    type:"POST",
+    data:JSON.stringify(data)
+  }).then(addExercise);
+})
+```
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# A: 3
+  
+- UI (DOM), model (validation), persistance (AJAX)
+
+
+```javascript
+// DOM
+$(".update").on("submit",function() {
+  evt.preventDefault();
+  var data = toJSON(form);
+  // model
+  var errors = validateExercise(data);
+  if(errors) {
+    return showErrors(errors)
+  }
+  // persistance
+  $.ajax({
+    url:'/exercises',
+    type:"POST",
+    data:JSON.stringify(data)
+  }).then(addExercise);
+})
+```
+</script></section>
+
+<section data-markdown ><script type="text/template">
+
+# Code has it easy with Backbone!
 
 </script></section>
+
 <section data-markdown ><script type="text/template">
-# Bird's eye view
+# Responsiblities
 
 - What you are doing for a user lives in your `Models`
 
 - How you interact with the user lives in `Views`
 
-- You talk to servers via `Backbone.sync`
+- Your persistance is handled by `Backbone.sync`
 
 - You make your app feel like a website with `Router`
 
-
 </script></section>
+
 <section data-markdown ><script type="text/template">
 # Key terms
 - Domain
@@ -135,14 +189,15 @@
 # State
 
 - What has happened in the domain.
-- In the domain, you now have have 
+- In the domain, you now have have:
 
+<br>
 
 500 points
 
 or £500
 
-or 500 friends.
+or 500 friends
 
 </script></section>
 <section data-markdown ><script type="text/template">
@@ -179,28 +234,123 @@ or 500 friends.
 - validation: both present, both 1-20
 
 </script></section>
+
+<section data-markdown ><script type="text/template">
+# Interleude! <br> BB classes
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+# Class, BB-style
+
+- `extend` gives us a sub-class
+
+```javascript
+var User = Backbone.Model.extend({
+  initialize: function() {
+    // our constructor, given args from constructor call
+  },
+  // instance properties
+  // avilable on instances
+  login: function() {
+  }
+},{
+  // 'statics': live on the `User`
+  // constructor
+  maxAttempts: 3
+});
+
+User.maxAttempts // 3
+var user = new User
+user.login()
+```
+</script></section>
+
+<section data-markdown ><script type="text/template">
+# Pure JS
+
+- rough version of what `extend` does
+
+```javascript
+function User() {
+  Backbone.Model.call(this)
+  // where our `initialize()` code is run:
+  // after Backbone has done its setup
+}
+// 'statics': properties of constructor
+User.maxAttempts = 3
+
+// make user 'extend' Backbone.Model
+// elided <...magic prototype dance...>
+
+// then we set our prototype methods
+User.prototype.login = function() {
+}
+```
+</script></section>
+
+
+<section data-markdown ><script type="text/template">
+# PHP(ish)
+
+```php
+class User extends Backbone.Model {
+  function __construct() {
+    // our initialize
+  }
+  function login () {
+  }
+  static $maxAttempts = 3;
+}
+```
+</script></section>
+
+
+<section data-markdown ><script type="text/template">
+# Conclusion
+
+- `initialize` is our constructor, passed constructor args
+- `extend` can be used on our sub-classes too
+
+```javascript
+var SubClassConstructor = 
+  Backbone[type].extend(
+    {prototypeProp: "a" /* , ... */},
+    {staticProp: "A" /* , ... */}
+  );
+
+var subClassInstance = new SubClassConstructor
+```
+</script></section>
+
+<section data-markdown ><script type="text/template">
+# Let's define a model
+</script></section>
+
 <section data-markdown ><script type="text/template">
 # Model
-```
-Exercise = Model.extend({
+
+```javascript
+Exercise = Backbone.Model.extend({
   url: function() {
-    return "/exercise" + (this.isNew() ? "s" : "/" + this.id);
+    return "/exercise" + 
+      (this.isNew() ? "s" : "/" + this.id);
   },
   validate: function(attrs) {
-    attrs.sets = parseInt(attrs.sets)
-    attrs.reps = parseInt(attrs.reps)
     var errors = []
-    if(attrs.sets > 20 || attrs.sets < 1) errors.push("sets must be between 1-20");
-    if(attrs.reps > 20 || attrs.reps < 1) errors.push("reps must be between 1-20");
+    attrs.sets = parseInt(attrs.sets)
+    if(attrs.sets > 20 || attrs.sets < 1) 
+      errors.push("sets must be between 1-20");
+    // etc ...
     if(errors.length > 0) {
-      return "Exercise item invalid: " + errors.join(" and ") + ".";
+      return "Exercise item invalid: " + 
+        errors.join(" and ") + ".";
     }
   }
 });
 ```
-
-
 </script></section>
+
 <section data-markdown ><script type="text/template">
 # Get a lot for free
 
@@ -212,10 +362,16 @@ Didn't have to:
 </script></section>
 <section data-markdown ><script type="text/template">
 # Key: get/set/on
-```
+
+```javascript
+// set one, or many attributes
+model.set("sets",14)
 model.set({sets:12,reps:12})
+
+// read attributes back
 model.get("sets") // 12
 
+// we get notified of all changes
 model.on("change:sets",function(model,sets) {
   console.log("Sets changed to ",sets)
 })
@@ -230,11 +386,14 @@ model.on("change:sets",function(model,sets) {
 - Get/set gives us an encapusalted set of attributes.
 - We get notified whenever they change via `Backbone.Events`' `on` method.
 
-```
-model.on("change:SOMETHING",function(THE_MODEL,THE_NEW_VALUE) {
+```javascript
+// listen to specific attribute
+model.on("change:SOMETHING",function(THE_MODEL,NEW_VALUE) {
   /* do something */
   var previousValue = model.previous("SOMETHING");
-})
+});
+// or any change at all
+model.on("change",needsToKnowAboutAnyChange);
 ```
 
 
@@ -263,24 +422,33 @@ var previousValue = model.previous("SOMETHING");
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Example - validation
+# e.g validation
 ```
 Exercise = Model.extend({
   validate: function(attrs) {
-    attrs.sets = parseInt(attrs.sets)
-    attrs.reps = parseInt(attrs.reps)
     var errors = []
-    if(attrs.sets > 20 || attrs.sets < 1) errors.push("sets must be between 1-20");
-    if(attrs.reps > 20 || attrs.reps < 1) errors.push("reps must be between 1-20");
+    attrs.sets = parseInt(attrs.sets)
+    if(attrs.sets > 20 || attrs.sets < 1) 
+      errors.push("sets must be between 1-20");
+    // etc ...
     if(errors.length > 0) {
-      return "Exercise item invalid: " + errors.join(" and ") + ".";
+      return "Exercise item invalid: " + 
+        errors.join(" and ") + ".";
     }
   }
 });
 ```
+</script></section>
 
+<section data-markdown ><script type="text/template">
+# Validation runs:
+
+- when `set()` is passed `{validate: true}`
+- when saving via `save()`
+- both return `false` if invalid, and trigger `invalid` event
 
 </script></section>
+
 <section data-markdown ><script type="text/template">
 # SPOT
 
@@ -288,7 +456,8 @@ Exercise = Model.extend({
 
 - Single point of truth - SPOT
 ```
-exercise.set({sets:-10}) // will fail, no matter where it's called from
+// will fail, no matter where it's called from
+exercise.set({sets:-10})
 ```
 
 
@@ -302,34 +471,159 @@ list.on("submit","form",function(evt) {
   var errors = validateExercise(data);
 })
 ```
+</script></section>
 
+<section data-markdown ><script type="text/template">
+# Model
+
+- has an `id`
+- has `attributes` accessible via `set` and `get`
+- fires BB's events, can trigger your own
 
 </script></section>
+
 <section data-markdown ><script type="text/template">
 # Collections
 
-- Simple - a one or models.
-
-- Useful collection events: `add`, `remove`, `reset`.
-
-- Also delegates all model events:
-```
-exerciseList.on("change:sets",function(model,newValue,collection) {
-  /* */
-});
-```
-
+- deal with group of entities from our model
+- ordered, indexed by `id` property of model: an Ordered Map
+- have Array methods, and _'s methods
 
 </script></section>
+
 <section data-markdown ><script type="text/template">
-# Useful domain tasks
-- Keep in a certain order: comparator on Model
-- Has all of underscore.js's great methods
-- You can include, shuffle, pluck, reduce (JS 1.8.x method).
+# Collections
+
+- Defining
+
+```javascript
+var MyCollection = Backbone.Collection.extend({
+  initialize: function(models,options) {
+  },
+  model: MyModel // constructor for new models
+})
+
+var aCollection = new MyCollection([
+  {foo: "bar"}, // non-Models will be converted
+  new MyModel({foo: "bar"}) // existing models
+],{
+  // options
+} /*, additonal args not touched by BB */)
+```
 
 </script></section>
+
 <section data-markdown ><script type="text/template">
-# Proactive - model drives the app
+# Basics
+
+```javascript
+var myCollection = new MyCollection([
+  {id: 1}
+])
+
+var recordOne = myCollection.get(1)
+
+myCollection.add([{id: 2}])
+
+// set to update - default:
+// - adds new models
+// - updates existing
+// - removes missing
+myCollection.set([{id: 1, foo: "bar"}],{remove: false})
+myCollection.get(1).get("foo") // "bar"
+myCollection.get(2) // still here!
+
+myCollection.reset([]) // now empty!
+```
+
+</script></section>
+
+
+<section data-markdown ><script type="text/template">
+# Filtering
+
+```
+var myCollection = new MyCollection([
+  {id: 1, foo: "bar"},
+  {id: 2, foo: "baz"}
+])
+
+// underscore methods
+myCollection.pluck("foo") // ["bar","baz"]
+
+// `where` finds all models with set attributes
+myCollection.where({foo: "bar"}) // [Model1]
+
+// `findWhere` finds first model
+myCollection.findWhere({foo: "bar"}) // Model1
+```
+
+</script></section>
+
+
+<section data-markdown ><script type="text/template">
+# Events
+
+- Useful collection events: `add`, `remove`, `reset`, `sort`
+
+```javascript
+collection.on("add",function(model,collection,addOptions) {
+  // handle
+})
+```
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+# Interaction
+
+- Models get a `.collection` property when added to first collection
+- Collections delegate all model events:
+
+```javascript
+exerciseList.on("change:sets",
+  function(model,newValue,collection) {
+    /* */
+  });
+```
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+# Comparator
+
+- Define a comparator method to keep in specific order
+
+```javascript
+var MyCollection = Backbone.Collection.extend({
+  comparator: function(model) {
+    return model.get("name")
+  }
+})
+```
+
+</script></section>
+
+
+
+<section data-markdown ><script type="text/template">
+# Collections:
+
+- Convert objects to models using `Model` prototype property
+- Modified by `add`, `set`, `remove`
+- Can be kept in a certain order via comparator
+- Have all of underscore.js's great methods
+
+</script></section>
+
+
+<section data-markdown ><script type="text/template">
+# The model layer: Models + Collections
+
+</script></section>
+
+<section data-markdown ><script type="text/template">
+# Our model drives
 
 - Drive your app by listening to events on your `Models` and `Collections`.
 
@@ -341,19 +635,43 @@ model.on("domainSpecificEvent")
 collection.on("add")
 collection.on("remove")
 collection.on("reset")
-collection.on("ANY_MODEL_EVENT_DELEGATED")
+collection.on("$EVENT_FROM_CONTAINED_MODEL")
 ```
 
-
 </script></section>
+
+<section data-markdown ><script type="text/template">
+# Fire your own
+
+- Don't just listen to attribute events
+- Split message from implementation
+
+```
+// triggering a custom named event
+this.on("change:id",function(id) {
+  // stick to Backbone's API: pass model!
+  this.trigger("loggedIn",id != null,this)
+},this);
+
+// consumers don't need to know how 
+// it's triggered, just listen for
+// intention revealing event
+// in view:
+user.on("loggedIn",function() {
+  // handle
+})
+
+```
+</script></section>
+
 <section data-markdown ><script type="text/template">
 # Model summary
 - Hold all domain knowledge
+- Single entity: Model, groups: Collection
 - Use events to react to changes in domain state
 - Validate method to keep our domain in good shape
-- Use collections to deal with >1 model
-
 </script></section>
+
 <section data-markdown ><script type="text/template">
 # Next - the dumb view
 ![Gump](img/gump.jpeg)
@@ -372,13 +690,16 @@ collection.on("ANY_MODEL_EVENT_DELEGATED")
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Free goodies from Backbone
+# Defining
 
-- Don't faff around manually creating events, let Backbone do it for you:
-```
-ExerciseList = View.extend({
-  // "EVENT SELECTOR(s)": "METHOD_NAME"
+- Like model, and like model: freebies!
+- Don't faff around manually creating events, let Backbone do it for you
+- Will create event delegation on the `View`'s `el`.
+
+```javascript
+var ExerciseList = Backbone.View.extend({
   events: {
+    // "$event $selectors(s)": "methodName"
     "click .remove": "remove",
     "submit #exercises form": "update",
     "submit": "create"
@@ -387,7 +708,6 @@ ExerciseList = View.extend({
 ```
 
 
-- Will create event delegation on the `View`'s `el`.
 
 
 </script></section>
@@ -411,11 +731,13 @@ ExerciseList = View.extend({
 </script></section>
 <section data-markdown ><script type="text/template">
 # Other boring bits you don't need to do
-```
+
+```javascript
 View.extend({
   id: "exercise-list", // id for el
   className: "panel mobile", // class names for el
-  tagName: "ul" // type of element el will be, defaults to div
+  tagName: "ul" /* type of element el will be,
+   defaults to div */
   attrs: { // attributes to set on el
     draggable: true
   }
@@ -426,14 +748,15 @@ View.extend({
 </script></section>
 <section data-markdown ><script type="text/template">
 # Other key bits
-```
+
+```javascript
 ExerciseList = View.extend({
   initialize: (options) {
     if(!this.model || !this.collection || !this.el) {
-      throw "Never happens - all assigned for you already from options");
+      throw "Never happens - assigned for you already");
     }
-    this.$el.fadeIn() // a pre-DOM-library-wrapped pointer to el
-    this.$(".exercises") // and a selector with context preset to el
+    this.$el.fadeIn() // a DOM-library-wrapped to el
+    this.$(".exercises") // selector with el as context
   }
 })
 new ExerciseList({
@@ -471,7 +794,8 @@ this.render() // update view
 ```
 ExerciseList = View.extend({
   _.bindAll(this,"render","error");
-  this.listenTo(this.collection,"add remove reset change", this.render);
+  this.listenTo(this.collection,"add remove reset change",
+    this.render);
   this.listenTo(this.collection,"error",this.error);
   this.render();
 })
@@ -479,8 +803,13 @@ ExerciseList = View.extend({
 
 
 </script></section>
+
 <section data-markdown ><script type="text/template">
 # View not limited to DOM
+</script></section>
+
+<section data-markdown ><script type="text/template">
+# Canvas, WebGL
 ```
 SpaceInvadersRenderer = View.extend({
   initialize: function() {
@@ -490,41 +819,41 @@ SpaceInvadersRenderer = View.extend({
   }
 })
 ```
-
-
 </script></section>
+
 <section data-markdown ><script type="text/template">
 # Sound
 ```
 Sound = View.extend({
   initialize: function(opts) {
     /* assignment */
-    this.listenTo(this.match,"start",this.play.bind(this,"whistle"))
-    this.listenTo(this.events,"foul",this.randomGroan,this)
-    this.listenTo(this.events,"goal",this.randomCheer,this)
+    this.listenTo(this.match,"start",
+      this.play.bind(this,"whistle"))
+    this.listenTo(this.events,"foul",
+      this.randomGroan,this)
+    this.listenTo(this.events,"goal",
+      this.randomCheer,this)
   }
 })
 ```
-
-
 </script></section>
+
+
 <section data-markdown ><script type="text/template">
-# Logging
+# D3, other libraries
 ```
-Logger = View.extend({
-  initialize: function(opts) {
-    /* assignment */
-    this.user.on("all",this.userAudit)
-    this.songs.on("all",this.songAudit)
+var DataVizView = View.extend({
+  render: function() {
+    d3.select(this)
+      .selectAll(".point")
+      .data(this.collection.toJSON())
+      /* ... */
   }
 })
 ```
-
-
-- Logging is likely non-domain, makes sense to keep it as a 'view' of it instead.
-
-
 </script></section>
+
+
 <section data-markdown ><script type="text/template">
 # Templates
 
@@ -611,12 +940,12 @@ Model.extend({
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Drives persistance of Model
+# Persists model
 ```
 model.fetch() // Backbone.sync("read",model,options)
 
 // save method depends on model.isNew()
-// Backbone.sync("create OR update",model,{success,error})
+// sync("create" || "update",model,{success,error})
 model.save({someUpdate:"toAttributes"},{
   success: function() ...
   error: function()..
@@ -739,7 +1068,7 @@ collection.fetch()
 - If you need content immediately, generate some (share templates)
 - Provide immediate data in a constant
 
-```
+```javascript
 var BOOT_DATA = <%= some_data.to_json %>;
 ```
 
@@ -751,8 +1080,9 @@ var BOOT_DATA = <%= some_data.to_json %>;
 
 - Ties our nicely modular code into global environment
 
-```
-require(["v/app","vendor/underscore","vendor/backbone"],function(AppView,_,Backbone) {
+```javascript
+require(["v/app","vendor/underscore","vendor/backbone"],
+function(AppView,_,Backbone) {
 
   var pubSub = _.extend({},Backbone.Events);
 
@@ -761,8 +1091,9 @@ require(["v/app","vendor/underscore","vendor/backbone"],function(AppView,_,Backb
   var app = new AppView({
     pubSub: pubSub,
     // if we have initial boot data, the boot script
-    // is the only place we reference it, everything else is passed it
-    // model: new SomeTopLevelModel({ models: BOOT_DATA })
+    // is the only place we reference it, 
+    // everything else is passed it
+    // model: new SomeTopLevelModel({models:BOOT_DATA})
     el: document.querySelector(".root")
   })
 
@@ -781,7 +1112,7 @@ require(["v/app","vendor/underscore","vendor/backbone"],function(AppView,_,Backb
 - Basic idea: attach child views inside parent
 - Ensure cleanup is triggered for child views
 
-```
+```javascript
 var ParentView = Backbone.View.extend({
   initialize: function() {
     this.children = [];
@@ -886,6 +1217,11 @@ var model = new OuterModel({
 </div>
 </div>
 
+<!-- library being demoed -->
+<script src="../libs/underscore.js"></script>
+<script src="../libs/backbone.js"></script>
+
+<!-- reveal -->
 <script src="reveal/lib/js/head.min.js"></script>
 <script src="reveal/js/reveal.min.js"></script>
 <script>

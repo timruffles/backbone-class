@@ -1,3 +1,4 @@
 .gallary img, .gallary .item {
-  float: left
+  float: left;
+  margin: 0.5rem;
 }
