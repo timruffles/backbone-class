@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>sync.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="deps.html">
+                deps.js
+              </a>
+            
+              
+              <a class="source" href="localStorage.html">
+                localStorage.js
+              </a>
+            
+              
+              <a class="source" href="pub_sub_vs_not.html">
+                pub_sub_vs_not.js
+              </a>
+            
+              
+              <a class="source" href="rebuild.html">
+                rebuild.js
+              </a>
+            
+              
+              <a class="source" href="requirejs-config.html">
+                requirejs-config.js
+              </a>
+            
+              
+              <a class="source" href="side-effects.html">
+                side-effects.js
+              </a>
+            
+              
+              <a class="source" href="sync.html">
+                sync.js
+              </a>
+            
+              
+              <a class="source" href="with_require.html">
+                with_require.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>sync.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>Persistance - handling with sync
+example api response with a nested object. by default it&#39;ll
+emerge as just that - a js object. If we need it to be a Model
+we&#39;ll have either to handle it in Model.parse (which mixes
+persistance with model and only handles a specific implementation)
+or handle it in a modified Sync.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> apiResponse = {
+  user: {
+    account: {
+      name: <span class="string">"account 54"</span>
+    }
+  }
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>example of problem:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> user = <span class="keyword">new</span> User;
+user.fetch() <span class="comment">// user.sync("read") -&gt; user.set(user.parse(response))</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>user.attributes -&gt; {account: {}}</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>user.get(<span class="string">"account"</span>) <span class="comment">// {}</span>
+user.get(<span class="string">"account"</span>).get(<span class="string">"name"</span>) <span class="comment">// No method error: get()</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>solution - via parse
+mixes up our concerns: if we have another sync method we&#39;ll have to make
+this more complex</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> Account = Backbone.Model.extend({
+  parse: <span class="function"><span class="keyword">function</span><span class="params">(resp)</span> {</span>
+    resp.account = <span class="keyword">new</span> Account(resp.account)
+    <span class="keyword">return</span> resp
+  }
+})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>solution - via custom sync</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> User = Backbone.Model.extend({
+  type: <span class="string">"User"</span>,
+  sync: CustomSync
+})
+<span class="keyword">var</span> Account = Backbone.Model.extend({})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>custom sync implementation that uses reflection
+on model.type to find  out where to store and how.
+keeps neat separation between persistance and model 
+concerns</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> CustomSync = <span class="function"><span class="keyword">function</span><span class="params">(method,model,options)</span> {</span>
+  <span class="keyword">var</span> url = model.type.toLowerCase() + <span class="string">"/"</span> + model.id
+
+  $.ajax({
+    data: parsers[model.type].toServer(model),
+    success: parsers[model.type].fromServer
+  })
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>we can do similar things for each persistance source -
+it&#39;s likely that they&#39;ll have different parsing requirements.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> parsers = {
+  User: {
+    toServer: <span class="function"><span class="keyword">function</span><span class="params">(model)</span> {</span>
+    },
+    fromServer: <span class="function"><span class="keyword">function</span><span class="params">(resp)</span> {</span>
+      resp.account = <span class="keyword">new</span> Account(resp.account)
+      <span class="keyword">return</span> resp
+    }
+  }
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

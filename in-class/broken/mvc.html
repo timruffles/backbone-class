@@ -1,0 +1,71 @@
+<html>
+  <head>
+    <title>MVC Exercise Tracking</title>
+    <script src="../libs/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../libs/underscore.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../libs/backbone.js" type="text/javascript" charset="utf-8"></script>
+    <script src="fake_xhr.js" type="text/javascript" charset="utf-8"></script>
+    <script id="exercises_tpl" type="text/underscore" charset="utf-8">
+      <h1>Exercise tracking</h1>
+      <!-- display exercises -->
+      <ul class="exercises" class="twelve columns">
+        <% exercises.forEach(function(exercise) { %>
+          <li class="exercise" data-id="<%= exercise.id %>">
+            <%= exercisePartial(exercise) %>
+            <div class="large-3 columns without-label">
+              <button class="remove small button alert large-6 columns">Remove</button>
+              <a href="#exercises/<%= exercise.id %>" class="large-6 columns">Detail</a>
+            </div>
+          </li>
+        <% }) %>
+      </ul>
+      <h3>Add exercise</h3>
+      <div class="create exercise">
+        <%= exercisePartial() %>
+      </div>
+    </script>
+    <script id="exercise_tpl" type="text/underscore" charset="utf-8">
+      <form data-id="<%= exercise.id %>" class="exercise-form large-9 columns">
+        <div class="large-5 columns">
+          <label for="exercise">Exercise</label>
+          <select name="type">
+            <option value='squat'>Squat</option>
+            <option value='bench_press'>Bench Press</option>
+            <option value='overhead_press'>Overhead Press</option>
+            <option value='deadlift'>Deadlift</option>
+            <option value='barbell_rows'>Barbell Rows</option>
+          </select>
+        </div>
+        <div class="large-3 columns">
+          <label for="sets">Sets</label>
+          <input type="text" name="sets" value="<%= exercise.sets || 5 %>" />
+        </div>
+        <div class="large-3 columns">
+          <label for="reps">Reps</label>
+          <input type="text" name="reps" value="<%= exercise.reps || 5 %>" />
+        </div>
+        <div class="large-1 columns without-label">
+          <button class="small button">Save</button>
+        </div>
+      </form>
+    </script>
+    <script id="show_tpl" type="text/underscore" charset="utf-8">
+      <h2><%= exercise.type %></h2>
+      <p>Tracked today at 15.34</p>
+      <ul>
+        <li>Sets: <%= exercise.sets %></li>
+        <li>Reps: <%= exercise.sets %></li>
+      </ul>
+      <a href="#">Back to tracking</a>
+    </script>
+    <script src="mvc.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" href="css/foundation.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="css/app.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  </head>
+  <body>
+
+    <section id="exercise_list" class=row>
+    </section>
+
+  </body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>rebuild.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="deps.html">
+                deps.js
+              </a>
+            
+              
+              <a class="source" href="localStorage.html">
+                localStorage.js
+              </a>
+            
+              
+              <a class="source" href="pub_sub_vs_not.html">
+                pub_sub_vs_not.js
+              </a>
+            
+              
+              <a class="source" href="rebuild.html">
+                rebuild.js
+              </a>
+            
+              
+              <a class="source" href="requirejs-config.html">
+                requirejs-config.js
+              </a>
+            
+              
+              <a class="source" href="side-effects.html">
+                side-effects.js
+              </a>
+            
+              
+              <a class="source" href="sync.html">
+                sync.js
+              </a>
+            
+              
+              <a class="source" href="with_require.html">
+                with_require.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>rebuild.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>define our models + collections</p>
+<p>views</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> View = Backbone.View;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>simple collection view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> ExerciseList = View.extend({
+  initialize: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.collection,<span class="string">"add"</span>,<span class="keyword">this</span>.renderNew,<span class="keyword">this</span>);
+    <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.collection,<span class="string">"remove"</span>,<span class="keyword">this</span>.removeElement,<span class="keyword">this</span>);
+    <span class="keyword">this</span>.children = {};
+  },
+  tagName: <span class="string">"ul"</span>,
+  renderNew: <span class="function"><span class="keyword">function</span><span class="params">(model)</span> {</span>
+    <span class="keyword">var</span> view = <span class="keyword">new</span> ExerciseShow({
+      model: model
+    })
+    view.render()
+    <span class="keyword">this</span>.children[model.id] = view;
+    <span class="keyword">this</span>.el.appendChild(view.el);
+  },
+  removeElement: <span class="function"><span class="keyword">function</span><span class="params">(model)</span> {</span>
+    <span class="keyword">var</span> childView = <span class="keyword">this</span>.children[model.id];
+    <span class="keyword">if</span>(childView) childView.remove();
+    <span class="keyword">delete</span> <span class="keyword">this</span>.children[model.id];
+  }
+})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>item view - only worries about one model</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> ExerciseShow = View.extend({
+  initialize: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.model,<span class="string">"change"</span>,<span class="keyword">this</span>.render,<span class="keyword">this</span>);
+  },
+  tagName: <span class="string">"li"</span>,
+  template: _.template(<span class="string">"&lt;p&gt;&lt;%= model.get('name') %&gt;&lt;/p&gt;"</span>),</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>mustache:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  render: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">this</span>.el.innerHTML = <span class="keyword">this</span>.template(<span class="keyword">this</span>.model)
+  }
+})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>a collection view that doesn&#39;t use itemViews - will have to read/write model ids to DOM</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> ExerciseListWithoutChildViews = View.extend({
+  initialize: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.collection,<span class="string">"remove"</span>,<span class="keyword">this</span>.removeElement,<span class="keyword">this</span>);
+  },
+  tagName: <span class="string">"ul"</span>,
+  template: _.template(<span class="string">"&lt;% collection.each(function(model) { ... }) %&gt;"</span>),
+  removeElement: <span class="function"><span class="keyword">function</span><span class="params">(model)</span> {</span>
+    <span class="keyword">this</span>.$(<span class="string">"[data-id="</span> + model.id + <span class="string">"]"</span>);
+  }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>stage view responsible for managing child views</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> StageView = View.extend({
+  initialize: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+  },
+  show: <span class="function"><span class="keyword">function</span><span class="params">(view)</span> {</span>
+    <span class="keyword">if</span>(<span class="keyword">this</span>.view) {
+      <span class="keyword">this</span>.view.transitionOut().then(<span class="keyword">this</span>.view.remove.bind(<span class="keyword">this</span>.view)).then(<span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+        <span class="keyword">this</span>.el.appendChild(view.el);
+      }.bind(<span class="keyword">this</span>))
+    }
+  }
+});
+
+
+
+
+<span class="keyword">var</span> AppView = Backbone.View.extend({
+  initialize: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+
+    <span class="keyword">this</span>.stage = <span class="keyword">new</span> StageView()
+    <span class="keyword">this</span>.$(<span class="string">"#stage"</span>).replaceWith(<span class="keyword">this</span>.stage.el)
+
+  }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>/search  - responsibility of parent of search view
+/search/query?foo=bar - responsibility of the search</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> SearchView = Backbone.View.extend({
+  initialize: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>.pubSub,<span class="string">"route:search:specific"</span>,<span class="keyword">this</span>.renderSearch,<span class="keyword">this</span>);
+  },
+  remove: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">this</span>.stopListening( <span class="comment">/* source */</span>, <span class="comment">/* event name */</span>, <span class="comment">/* function */</span>, <span class="comment">/* context */</span>)
+  }
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

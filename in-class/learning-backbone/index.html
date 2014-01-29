@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>Blank Backbone App</title>
+    <link rel="stylesheet" href="app.css" type="text/css" media="screen" charset="utf-8">
+  </head>
+  <body>
+
+
+    <script src="../libs/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../libs/underscore.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../libs/backbone.js" type="text/javascript" charset="utf-8"></script>
+
+    <!-- pop in scripts here, or use a script-loader -->
+    <script id="a_name" type="text/underscore" charset="utf-8">
+      <h1>Some HTML</h1>
+    </script>
+    <script id="exercise_list" type="text/underscore" charset="utf-8">
+      <% exercises.each(function(model) { %>
+        <li><%= model.get("name") %></li>
+      <% }); %>
+      <a href="#form">Add form</a>
+    </script>
+    <script id="form" type="text/underscore" charset="utf-8">
+      <input name=name placeholder="Please name me!" />
+      <button>Go</button>
+      <a href="#">See list</a>
+    </script>
+
+    <script src="app.js" type="text/javascript" charset="utf-8"></script>
+  </body>
+</html>

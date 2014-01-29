@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>localStorage.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="deps.html">
+                deps.js
+              </a>
+            
+              
+              <a class="source" href="localStorage.html">
+                localStorage.js
+              </a>
+            
+              
+              <a class="source" href="pub_sub_vs_not.html">
+                pub_sub_vs_not.js
+              </a>
+            
+              
+              <a class="source" href="rebuild.html">
+                rebuild.js
+              </a>
+            
+              
+              <a class="source" href="requirejs-config.html">
+                requirejs-config.js
+              </a>
+            
+              
+              <a class="source" href="side-effects.html">
+                side-effects.js
+              </a>
+            
+              
+              <a class="source" href="sync.html">
+                sync.js
+              </a>
+            
+              
+              <a class="source" href="with_require.html">
+                with_require.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>localStorage.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>constructor for localStorageSync, pass in storage object
+for testability</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> LocalStorageSync = <span class="function"><span class="keyword">function</span><span class="params">(storage)</span> {</span>
+
+  <span class="function"><span class="keyword">function</span> <span class="title">publicApi</span><span class="params">(method,model,options)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>dispatch based on method</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>     publicApi[method](method,model,options)
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>implementing verbs fairly simple in this case</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  publicApi.read = <span class="function"><span class="keyword">function</span><span class="params">(method,model,options)</span> {</span>
+    <span class="keyword">var</span> store = storage[model.type + model.id]
+    <span class="keyword">if</span>(!store) <span class="keyword">return</span>
+    store = JSON.parse(store)
+    <span class="keyword">return</span> store
+  }
+  publicApi.save = <span class="function"><span class="keyword">function</span><span class="params">(method,model,options)</span> {</span>
+    storage[model.type + model.id] = JSON.stringify(model.toJSON())
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>return out publicApi - a single Backbone.sync compatible function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">return</span> publicApi;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>useage: set sync on prototype, or even instance</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> User = Backbone.Model.extend({
+  sync: LocalStorageSync(localStorage)
+})</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
