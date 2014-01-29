@@ -1,19 +1,25 @@
 # Class materials for 'Web apps with Backbone'
 
-Example code for the class, demonstrating two approches to writing a simple exercise app.
+- /slides
+	- slides used in the lesson
+- /demo-app
+  - Example code for the class, demonstrating two approches to writing a simple exercise app.
+- /exercises
+	- code for in-class exercises
+- /exercises/backbone-skeleton
+	- copy this for each new exercise
+- /exercises/test-skeleton
+	-  copy this for each new exercise with unit tests
+- /libs
+	- copies of our library code
 
-## Running
+## Demo-app
+
+### Running
 
 Designed to be work locally - just open the `.html` files and you're off.
 
-## MVC
 
-A version of the exercise app in Backbone.js, with routing.
-
-## Non-MVC
-
-An unstructed version of the exercise app. No routing.
-
-## Fake XHR
+### Fake XHR
 
 To keep things simple, there is a fake XHR implementation. No servers to run.
