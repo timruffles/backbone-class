@@ -136,7 +136,7 @@ $(".update").on("submit",function() {
   if(errors) {
     return showErrors(errors)
   }
-  // persistance
+  // persistence
   $.ajax({
     url:'/exercises',
     type:"POST",
@@ -255,7 +255,7 @@ var User = Backbone.Model.extend({
     // our constructor, given args from constructor call
   },
   // instance properties
-  // avilable on instances
+  // available on instances
   login: function() {
   }
 },{
@@ -512,7 +512,7 @@ var aCollection = new MyCollection([
   new MyModel({foo: "bar"}) // existing models
 ],{
   // options
-} /*, additonal args not touched by BB */)
+} /*, additional args not touched by BB */)
 ```
 
 </script></section>
@@ -742,7 +742,7 @@ View.extend({
   className: "panel mobile", // class names for el
   tagName: "ul" /* type of element el will be,
    defaults to div */
-  attrs: { // attributes to set on el
+  attributes: { // attributes to set on el
     draggable: true
   }
 })
@@ -773,20 +773,19 @@ new ExerciseList({
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Don't do and then
+# Don't do and assume
 
-- Don't do and then, do and rely on defined callbacks
+- Don't do and assume you know what happened
+- Define callbacks to hear about what happened
+- What happens when someone else changes the domain in the same way?
+- We would still want the `View` or other code to react in the same way.
 
-- Don't manipulate model state like:
 ```
 team.addPlayer(player) // change state
 this.render() // update view
 ```
 
 
-- What happens when someone else changes the domain in the same way?
-
-- We would still want the `View` or other code to react in the same way.
 
 
 </script></section>
@@ -880,12 +879,14 @@ var DataVizView = View.extend({
 
 - A `render` function like that passes it to template
 ```
-transform = function() {
-  // an object
-}
-render = function() {
-  this.el.innerHTML = Mustache.to_html(this.template,this.transform())
-}
+var SomeView = Backbone.View.extend({
+  transform: function() {
+    return {some: this.model.get("data")};
+  },
+  render: function() {
+    this.el.innerHTML = Mustache.to_html(this.template,this.transform())
+  }
+});
 ```
 
 
@@ -922,7 +923,7 @@ Backbone.sync = function(method,model,options) {
 # Switch on context
 ```
 Model.extend({
-  sync: (method) {
+  sync: function(method) {
     if(method == "keepUpdated") {
       Pusher.sync.apply(Pusher,arguments);
     } else {
