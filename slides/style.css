@@ -3,8 +3,9 @@
   margin: 0.5rem;
 }
 
-.reveal a {
-  color: #fff;
+
+.reveal .front h1 {
+  font-size: 10rem;
 }
 .reveal .front .spaced {
   margin-top: 2rem;

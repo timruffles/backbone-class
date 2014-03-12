@@ -32,7 +32,7 @@ Grab code: <br> [github.com/timruffles/backbone-ga-class](http://github.com/timr
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Hello
+## Hello
 
 - https://github.com/timruffles/backbone-ga-class
 - Code + slides up above - clone if you've got `git`, or grab the `.zip`.
@@ -49,14 +49,14 @@ Grab code: <br> [github.com/timruffles/backbone-ga-class](http://github.com/timr
 </section>
 
 <section data-markdown ><script type="text/template">
-# Backbone is
+## Backbone is
 - structure for your app
 - the boring bits of MVC written for you
 
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# What Backbone is not
+## What Backbone is not
 - A DOM Library
 - An AJAX library
 - Big: ~1000, well documented, lines of code (read it)
@@ -66,13 +66,13 @@ Grab code: <br> [github.com/timruffles/backbone-ga-class](http://github.com/timr
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# What we'll do
+## What we'll do
 
 
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Go over
+## Go over
 
 - Bird's eye view of a Backbone app
 - Models
@@ -87,7 +87,7 @@ Grab code: <br> [github.com/timruffles/backbone-ga-class](http://github.com/timr
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Backbone apps
+## Backbone apps
 - Are primarily divided between `Models` and `Views`
 
 - Are primarily driven by events from the `Models` when they change
@@ -97,7 +97,7 @@ Grab code: <br> [github.com/timruffles/backbone-ga-class](http://github.com/timr
 
 <section data-markdown ><script type="text/template">
 
-# Q
+## Q
   
 - How many responsibilities does this code have?
 
@@ -121,7 +121,7 @@ $(".update").on("submit",function() {
 
 <section data-markdown ><script type="text/template">
 
-# A: 3
+## A: 3
   
 - UI (DOM), model (validation), persistance (AJAX)
 
@@ -148,12 +148,12 @@ $(".update").on("submit",function() {
 
 <section data-markdown ><script type="text/template">
 
-# Code has it easy with Backbone!
+## Code has it easy with Backbone!
 
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Responsiblities
+## Responsiblities
 
 - What you are doing for a user lives in your `Models`
 
@@ -166,14 +166,14 @@ $(".update").on("submit",function() {
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Key terms
+## Key terms
 - Domain
 - Model
 - State
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Domain
+## Domain
 - The 'problem' this app is solving for its users.
 "a specified sphere of activity or knowledge"
 
@@ -184,13 +184,13 @@ $(".update").on("submit",function() {
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Model
+## Model
 - The representation of our domain in code.
 
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# State
+## State
 
 - What has happened in the domain.
 - In the domain, you now have have:
@@ -205,7 +205,7 @@ or 500 friends
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# What does Backbone do?
+## What does Backbone do?
 - Domain & state lives in Model
 - View present and allows user to interact state
 - Sync saves state
@@ -213,26 +213,26 @@ or 500 friends
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# First up: Model aka Brain
+## First up: Model aka Brain
 ![Brain](img/brain.gif)
 
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Models
+## Models
 - Code handelling the real world processes your app represents or constitues.
 
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Our example app
+## Our example app
 
 - Weight training planner.
 - Very simple domain - exercises are 1-20 sets of 1-20 reps.
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Our `Model`
+## Our `Model`
 - sets attribute
 - reps attribute
 - validation: both present, both 1-20
@@ -240,12 +240,12 @@ or 500 friends
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Interleude! <br> BB classes
+## Interleude! <br> BB classes
 
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Class, BB-style
+## Class, BB-style
 
 - `extend` gives us a sub-class
 
@@ -271,7 +271,7 @@ user.login()
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Pure JS
+## Pure JS
 
 - rough version of what `extend` does
 
@@ -295,7 +295,7 @@ User.prototype.login = function() {
 
 
 <section data-markdown ><script type="text/template">
-# PHP(ish)
+## PHP(ish)
 
 ```php
 class User extends Backbone.Model {
@@ -311,7 +311,7 @@ class User extends Backbone.Model {
 
 
 <section data-markdown ><script type="text/template">
-# Conclusion
+## Conclusion
 
 - `initialize` is our constructor, passed constructor args
 - `extend` can be used on our sub-classes too
@@ -328,11 +328,11 @@ var subClassInstance = new SubClassConstructor
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Let's define a model
+## Let's define a model
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Model
+## Model
 
 ```javascript
 Exercise = Backbone.Model.extend({
@@ -356,7 +356,7 @@ Exercise = Backbone.Model.extend({
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Get a lot for free
+## Get a lot for free
 
 Didn't have to:
 
@@ -365,7 +365,7 @@ Didn't have to:
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Key: get/set/on
+## Key: get/set/on
 
 ```javascript
 // set one, or many attributes
@@ -385,7 +385,7 @@ model.on("change:sets",function(model,sets) {
 </script></section>
 <section data-markdown ><script type="text/template">
 
-# Set, get and on - core of Model
+## Set, get and on - core of Model
 
 - Get/set gives us an encapusalted set of attributes.
 - We get notified whenever they change via `Backbone.Events`' `on` method.
@@ -403,7 +403,7 @@ model.on("change",needsToKnowAboutAnyChange);
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Previous
+## Previous
 
 - Give us access to previous value of a changed attribute in any `change` callback.
 
@@ -415,7 +415,7 @@ var previousValue = model.previous("SOMETHING");
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Knowledge of domain
+## Knowledge of domain
 
 - Models are smart - here they know everything about what an exercise needs.
 
@@ -426,7 +426,7 @@ var previousValue = model.previous("SOMETHING");
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# e.g validation
+## e.g validation
 ```
 Exercise = Model.extend({
   validate: function(attrs) {
@@ -445,7 +445,7 @@ Exercise = Model.extend({
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Validation runs:
+## Validation runs:
 
 - when `set()` is passed `{validate: true}`
 - when saving via `save()`
@@ -454,7 +454,7 @@ Exercise = Model.extend({
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# SPOT
+## SPOT
 
 - One place to define/enforce good states for exercise
 
@@ -478,7 +478,7 @@ list.on("submit","form",function(evt) {
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Model
+## Model
 
 - has an `id`
 - has `attributes` accessible via `set` and `get`
@@ -487,7 +487,7 @@ list.on("submit","form",function(evt) {
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Collections
+## Collections
 
 - deal with group of entities from our model
 - ordered, indexed by `id` property of model: an Ordered Map
@@ -496,7 +496,7 @@ list.on("submit","form",function(evt) {
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Collections
+## Collections
 
 - Defining
 
@@ -518,7 +518,7 @@ var aCollection = new MyCollection([
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Basics
+## Basics
 
 ```javascript
 var myCollection = new MyCollection([
@@ -544,7 +544,7 @@ myCollection.reset([]) // now empty!
 
 
 <section data-markdown ><script type="text/template">
-# Filtering
+## Filtering
 
 ```
 var myCollection = new MyCollection([
@@ -566,7 +566,7 @@ myCollection.findWhere({foo: "bar"}) // Model1
 
 
 <section data-markdown ><script type="text/template">
-# Events
+## Events
 
 - Useful collection events: `add`, `remove`, `reset`, `sort`
 
@@ -579,7 +579,7 @@ collection.on("add",function(model,collection,addOptions) {
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Interaction
+## Interaction
 
 - Models get a `.collection` property when added to first collection
 - Collections delegate all model events:
@@ -594,7 +594,7 @@ exerciseList.on("change:sets",
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Comparator
+## Comparator
 
 - Define a comparator method to keep in specific order
 
@@ -611,7 +611,7 @@ var MyCollection = Backbone.Collection.extend({
 
 
 <section data-markdown ><script type="text/template">
-# Collections:
+## Collections:
 
 - Convert objects to models using `Model` prototype property
 - Modified by `add`, `set`, `remove`
@@ -622,12 +622,12 @@ var MyCollection = Backbone.Collection.extend({
 
 
 <section data-markdown ><script type="text/template">
-# The model layer: Models + Collections
+## The model layer: Models + Collections
 
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Our model drives
+## Our model drives
 
 - Drive your app by listening to events on your `Models` and `Collections`.
 
@@ -645,7 +645,7 @@ collection.on("$EVENT_FROM_CONTAINED_MODEL")
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Fire your own
+## Fire your own
 
 - Don't just listen to attribute events
 - Split message from implementation
@@ -669,7 +669,7 @@ user.on("loggedIn",function() {
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Model summary
+## Model summary
 - Hold all domain knowledge
 - Single entity: Model, groups: Collection
 - Use events to react to changes in domain state
@@ -677,13 +677,13 @@ user.on("loggedIn",function() {
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Next - the dumb view
-![Gump](img/gump.jpeg)
+## Next - the dumb view
+![Keep your backbone views dumb](img/dumb-view.jpg)
 
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Views
+## Views
 
 - The frontman - making noise, keeping users entertained.
 
@@ -694,7 +694,7 @@ user.on("loggedIn",function() {
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Defining
+## Defining
 
 - Like model, and like model: freebies!
 - Don't faff around manually creating events, let Backbone do it for you
@@ -716,7 +716,7 @@ var ExerciseList = Backbone.View.extend({
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# El what?
+## El what?
 
 - `el` is to DOM element a view owns.
 
@@ -727,14 +727,14 @@ var ExerciseList = Backbone.View.extend({
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Events roundup
+## Events roundup
 - Defined in events object
 - Bound before initialize via delegation
 - Therefore change the DOM inside as much as you like, just don't change el
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Other boring bits you don't need to do
+## Other boring bits you don't need to do
 
 ```javascript
 View.extend({
@@ -751,7 +751,7 @@ View.extend({
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Other key bits
+## Other key bits
 
 ```javascript
 ExerciseList = View.extend({
@@ -773,7 +773,7 @@ new ExerciseList({
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Don't do and assume
+## Don't do and assume
 
 - Don't do and assume you know what happened
 - Define callbacks to hear about what happened
@@ -790,7 +790,7 @@ this.render() // update view
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Always listen to the model, it's smart
+## Always listen to the model, it's smart
 
 - Smart models, dumb views, happy apps.
 
@@ -808,11 +808,11 @@ ExerciseList = View.extend({
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# View not limited to DOM
+## View not limited to DOM
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Canvas, WebGL
+## Canvas, WebGL
 ```
 SpaceInvadersRenderer = View.extend({
   initialize: function() {
@@ -825,7 +825,7 @@ SpaceInvadersRenderer = View.extend({
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Sound
+## Sound
 ```
 Sound = View.extend({
   initialize: function(opts) {
@@ -843,7 +843,7 @@ Sound = View.extend({
 
 
 <section data-markdown ><script type="text/template">
-# D3, other libraries
+## D3, other libraries
 ```
 var DataVizView = View.extend({
   render: function() {
@@ -858,7 +858,7 @@ var DataVizView = View.extend({
 
 
 <section data-markdown ><script type="text/template">
-# Templates
+## Templates
 
 - Easiest way to write DOM.
 
@@ -871,7 +871,7 @@ var DataVizView = View.extend({
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Templates are easy
+## Templates are easy
 
 - Very simple - I define:
 
@@ -892,7 +892,7 @@ var SomeView = Backbone.View.extend({
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# View summary
+## View summary
 - Dumb
 - Reactive - never update model and then
 - Use templates for DOM
@@ -900,14 +900,14 @@ var SomeView = Backbone.View.extend({
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Sync
+## Sync
 
 - If we can't store the state of our domain, we don't really have much of an app.
 
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Backbone sync
+## Backbone sync
 ```
 Backbone.sync = function(method,model,options) {
   /* default REST implementation */
@@ -920,7 +920,7 @@ Backbone.sync = function(method,model,options) {
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Switch on context
+## Switch on context
 ```
 Model.extend({
   sync: function(method) {
@@ -936,7 +936,7 @@ Model.extend({
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Overriding encouraged
+## Overriding encouraged
 
 - Very simple to override - without legacy is ~10 lines of code.
 
@@ -945,7 +945,7 @@ Model.extend({
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Persists model
+## Persists model
 ```
 model.fetch() // Backbone.sync("read",model,options)
 
@@ -963,7 +963,7 @@ model.destroy()
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# And Collection
+## And Collection
 ```
 // same as model.save() on new model
 collection.create(attributes,{
@@ -977,7 +977,7 @@ collection.fetch()
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Sync summary
+## Sync summary
 - Keep all persistance implementation here
 - Implementation behind Model's persistance methods
 - REST implementation free, easy to implement yourself
@@ -985,7 +985,7 @@ collection.fetch()
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Routing
+## Routing
 
 - Triggers callbacks when URL matches certain patterns.
 
@@ -1011,7 +1011,7 @@ collection.fetch()
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Role of router
+## Role of router
 
 - Avoid overdependence on router
 
@@ -1022,7 +1022,7 @@ collection.fetch()
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Router summary
+## Router summary
 - Simple routing via hashChange or pushState
 - Routes urls and fires callbacks, with extracted params
 - Consider use case
@@ -1030,7 +1030,7 @@ collection.fetch()
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Backbone roundup
+## Backbone roundup
 
 - What you are doing for a user lives in your `Models`
 
@@ -1044,17 +1044,17 @@ collection.fetch()
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Question time
+## Question time
 </script></section>
 
 <section data-markdown ><script type="text/template">
-# Let's (re)build
+## Let's (re)build
 </script></section>
 
 
 <section data-markdown ><script type="text/template">
 
-# Advanced topics
+## Advanced topics
 
 - Initialization in depth
 - Child views
@@ -1067,7 +1067,7 @@ collection.fetch()
 
 <section data-markdown ><script type="text/template">
 
-# User experience of boot
+## User experience of boot
 
 - Get a loader on screen first
 - If you need content immediately, generate some (share templates)
@@ -1081,7 +1081,7 @@ var BOOT_DATA = <%= some_data.to_json %>;
 
 <section data-markdown ><script type="text/template">
 
-# The boot
+## The boot
 
 - Ties our nicely modular code into global environment
 
@@ -1111,7 +1111,7 @@ function(AppView,_,Backbone) {
 
 <section data-markdown ><script type="text/template">
 
-# Child views
+## Child views
 
 - Marionette has plugins to do this
 - Basic idea: attach child views inside parent
@@ -1140,7 +1140,7 @@ var ParentView = Backbone.View.extend({
 
 <section data-markdown ><script type="text/template">
 
-# Event-driven architecture
+## Event-driven architecture
 
 - Events are very loose coupling - no reference to implementation
 - Coupled on string events and parameters
@@ -1151,7 +1151,7 @@ var ParentView = Backbone.View.extend({
 
 <section data-markdown ><script type="text/template">
 
-# Nested models
+## Nested models
 
 - Not as useful as you'd think
 - Views should be dealing with one level of models
@@ -1164,7 +1164,7 @@ var ParentView = Backbone.View.extend({
 
 <section data-markdown ><script type="text/template">
 
-# Law of demeter
+## Law of demeter
 
 - Speak to your friends only
 - Don't dig lots of levels deep to get what you need
@@ -1178,7 +1178,7 @@ var ParentView = Backbone.View.extend({
 
 <section data-markdown ><script type="text/template">
 
-# Hierachy in models
+## Hierachy in models
 
 - Keep inside attributes
 - Good to keep consistency, everything accessed via `get`
@@ -1199,7 +1199,7 @@ var model = new OuterModel({
 
 <section data-markdown ><script type="text/template">
 
-# Value objects
+## Value objects
 
 - Some things are values not identifiable objects
 - e.g Date, Period, Interval, Query
@@ -1211,7 +1211,7 @@ var model = new OuterModel({
 
 <section data-markdown ><script type="text/template">
 
-# Any other questions?
+## Any other questions?
 
 
 ## @timruffles, @sidekicksrc
