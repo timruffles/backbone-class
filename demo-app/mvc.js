@@ -89,8 +89,7 @@
     template: _.template(templates.exercises),
     exercisePartial: _.template(templates.exercise),
     render: function() {
-      var self;
-      self = this;
+      var self = this;
       var markup = $(this.template({
         exercises: this.collection.toJSON(),
         exercisePartial: function(exercise) {
