@@ -1,15 +1,15 @@
 (function(){
-  var Excercises, Exercise, ExerciseList, ExerciseShow, exerciseList, exercises, idEvent;
+
+  // in reality this would be one class per file,
+  // but for easier comparison with non_mvc.js 
+  // here all classes, & the boot script, are together
+
+  var Excercises, Exercise, ExerciseList, ExerciseShow, exerciseList, exercises, showView;
   var Model = Backbone.Model,
       View = Backbone.View,
       Collection = Backbone.Collection;
 
-  var toJSON = function(form) {
-    return form.serializeArray().reduce(function(json,kv) {
-      json[kv.name] = kv.value;
-      return json;
-    },{});
-  };
+  // models 
   Exercise = Model.extend({
     url: function() {
       return "/exercise" + (this.isNew() ? "s" : "/" + this.id);
@@ -25,15 +25,19 @@
       }
     }
   });
+
   Exercises = Collection.extend({
     model: Exercise,
     url: "/exercises"
   });
+
+  // views
   var templates = {
     exercise: document.head.querySelector("#exercise_tpl").innerHTML,
     exercises: document.head.querySelector("#exercises_tpl").innerHTML,
     show: document.head.querySelector("#show_tpl").innerHTML
   };
+
   ExerciseList = View.extend({
     events: {
       "click .remove": "remove",
@@ -72,6 +76,9 @@
       });
     },
     remove: function(evt) {
+      // once you're learned a bit more about backbone, you
+      // should a problem in this function: are the responsibilities
+      // of views & models correct?
       evt.preventDefault();
       var exercise = $(evt.currentTarget).parents(".exercise");
       var id = exercise.attr("data-id");
@@ -113,11 +120,14 @@
     }
   });
 
-  exercises = new Exercises;
-  exerciseList = new ExerciseList({
-    collection: exercises
-  });
-  var showView;
+  function toJSON(form) {
+    return form.serializeArray().reduce(function(json,kv) {
+      json[kv.name] = kv.value;
+      return json;
+    },{});
+  }
+
+  // define routes
   var AppRouter = Backbone.Router.extend({
     routes: {
       "": "list",
@@ -146,14 +156,28 @@
       });
     }
   });
-  new AppRouter()
-  $(function() {
+
+
+  // here's where our app boots. This is the point
+  // where we join up the global environment (global DOM, preloaded data etc)
+  // with our modular components
+  function boot() {
+
+    new AppRouter()
+
+    exercises = new Exercises;
+    exerciseList = new ExerciseList({
+      collection: exercises
+    });
+
     exerciseList.$el.appendTo($("#exercise_list"));
     exercises.fetch({
       success: function() {
         Backbone.history.start({pushState:false,root:""});
       }
     });
-  });
+  }
+
+  $(boot);
 })();
 
