@@ -48,9 +48,8 @@
       style: "display:none;"
     },
     initialize: function() {
-      _.bindAll(this,"render","error");
-      this.listenTo(this.collection,"add", this.render);
-      this.listenTo(this.collection,"error",this.error);
+      this.listenTo(this.collection,"add", this.render,this);
+      this.listenTo(this.collection,"error",this.error,this);
       this.render();
     },
     error: function(model,msg){
