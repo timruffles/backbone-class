@@ -414,6 +414,17 @@ var previousValue = model.previous("SOMETHING");
 
 
 </script></section>
+
+<section data-markdown ><script type="text/template">
+# Which entity?
+
+- Models are given a `cid` for client-side ID
+- They have an `id` for persistence ID
+- You can specify which attribute is used for ID
+
+</script></section>
+
+
 <section data-markdown ><script type="text/template">
 # Knowledge of domain
 
@@ -919,22 +930,7 @@ Backbone.sync = function(method,model,options) {
 - Not limited to REST verbs - I've used keepUpdated for Pusher/Polling
 
 </script></section>
-<section data-markdown ><script type="text/template">
-# Switch on context
-```
-Model.extend({
-  sync: function(method) {
-    if(method == "keepUpdated") {
-      Pusher.sync.apply(Pusher,arguments);
-    } else {
-      Backbone.sync.apply(Backbone,arguments);
-    }
-  }
-})
-```
 
-
-</script></section>
 <section data-markdown ><script type="text/template">
 # Overriding encouraged
 
@@ -944,19 +940,20 @@ Model.extend({
 
 
 </script></section>
+
 <section data-markdown ><script type="text/template">
 # Persists model
 ```
-model.fetch() // Backbone.sync("read",model,options)
+model.fetch() // this.sync("read",model,options)
 
 // save method depends on model.isNew()
-// sync("create" || "update",model,{success,error})
+// this.sync("create" || "update",model,{success,error})
 model.save({someUpdate:"toAttributes"},{
   success: function() ...
   error: function()..
 })
 
-// Backbone.sync("delete",model,options)
+// this.sync("delete",model,options)
 model.destroy()
 ```
 
@@ -976,6 +973,22 @@ collection.fetch()
 
 
 </script></section>
+
+<section data-markdown ><script type="text/template">
+# Switch on context
+```
+Model.extend({
+  sync: function(method) {
+    if(method == "keepUpdated") {
+      Pusher.sync.apply(Pusher,arguments);
+    } else {
+      Backbone.sync.apply(Backbone,arguments);
+    }
+  }
+})
+```
+</script></section>
+
 <section data-markdown ><script type="text/template">
 # Sync summary
 - Keep all persistance implementation here
