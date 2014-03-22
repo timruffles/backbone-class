@@ -37,6 +37,10 @@ Grab code: <br> [github.com/timruffles/backbone-ga-class](http://github.com/timr
 - https://github.com/timruffles/backbone-ga-class
 - Code + slides up above - clone if you've got `git`, or grab the `.zip`.
 
+<p contenteditable>
+Wifi: hubwestminster/HubWest1
+</p>
+
 
 </script></section>
 
@@ -807,11 +811,11 @@ this.render() // update view
 
 ```
 ExerciseList = View.extend({
-  _.bindAll(this,"render","error");
-  this.listenTo(this.collection,"add remove reset change",
-    this.render);
-  this.listenTo(this.collection,"error",this.error);
-  this.render();
+  initialize: function() {
+    this.listenTo(this.collection,"add remove reset change",
+      this.render,this);
+    this.listenTo(this.collection,"error",this.error,this);
+  }
 })
 ```
 
@@ -827,26 +831,8 @@ ExerciseList = View.extend({
 ```
 SpaceInvadersRenderer = View.extend({
   initialize: function() {
-    _.bindAll(this,"render")
     this.ctx = this.el.getContext("2d");
     window.requestAnimationFrame(this.render);
-  }
-})
-```
-</script></section>
-
-<section data-markdown ><script type="text/template">
-# Sound
-```
-Sound = View.extend({
-  initialize: function(opts) {
-    /* assignment */
-    this.listenTo(this.match,"start",
-      this.play.bind(this,"whistle"))
-    this.listenTo(this.events,"foul",
-      this.randomGroan,this)
-    this.listenTo(this.events,"goal",
-      this.randomCheer,this)
   }
 })
 ```
@@ -858,13 +844,18 @@ Sound = View.extend({
 ```
 var DataVizView = View.extend({
   render: function() {
-    d3.select(this)
+    d3.select(this.el)
       .selectAll(".point")
       .data(this.collection.toJSON())
       /* ... */
   }
 })
 ```
+</script></section>
+
+
+<section data-markdown ><script type="text/template">
+# Don't lose the benefits of an interface
 </script></section>
 
 
