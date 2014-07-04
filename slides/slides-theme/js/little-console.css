@@ -1,0 +1,30 @@
+.little-console input {
+  width: 100%;
+  height: 1rem;
+  background: rgba(0,0,0,0.1);
+  border: 0;
+  float: left;
+  border-top: 1px solid rgba(0,0,0,0.5);
+}
+.little-console input, .little-console code {
+  font-size: 1rem;
+  font-family: monospace;
+  padding: 0.25rem;
+}
+.little-console .error {
+  color: rgb(200,20,20);
+}
+.little-console code {
+  margin: 0;
+  height: 5em;
+  width: 100%;
+  overflow: scroll;
+  display: block;
+  background: rgba(0,0,0,0.025);
+}
+.little-console {
+  margin-top: 1em;
+}
+.little-console .result {
+  color: #888;
+}
