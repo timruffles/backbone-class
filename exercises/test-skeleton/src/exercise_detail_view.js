@@ -1,9 +1,14 @@
+
 var ExerciseDetailView = Backbone.View.extend({
   events: {
+    "click .remove": "triggerRemove"
   },
-
-  backClicked: function() {
-    this.options.bus.trigger() 
+  render: function() {
+    this.el.innerHTML = 
+      "<span class=name>" + this.model.get("name")
+      + "</span><span class=remove>X</span>";
+  },
+  triggerRemove: function() {
+    this.trigger("remove")
   }
-
-})
+});

@@ -1,44 +1,43 @@
 
-suite("ExerciseDetailView",function() {
-  this.pending = true
+suite.only("ExerciseDetailView",function() {
   
   var view;
-  var bus;
   beforeEach(function() {
-    bus = _.extend({},Backbone.Events)
     view = new ExerciseDetailView({
-      bus: bus,
       model: new Exercise({
-        sets: 4,
-        reps: 6
+        name: "swimming"
       })
     })
   })
+  
+  test("renders exercise name",function() {
+    
+    view.render();
+    
 
-  test("renders reps",function() {
-    var reps = $(view.el).find(".reps").text()
-    reps = parseInt(reps,10)
-    assert.equal( view.model.get("reps"), reps )
-    assert.equal( 1,
-      $(view.el).find(".reps").length )
-  })
+    
+    assert.equal(view.$(".name").text(),
+      view.model.get("name"));
+    
+  });
+  
+  test("triggers remove event on remove button clicked",function() {
+    
+    view.render();
+    
+    var called = false;
+    view.on("remove",function() {
+      called = true;
+    })
+    
+    view.$(".remove").click();
 
-  test("lets user edit reps",function() {
-    var newVal = 12;
-    $(view.el).find(".reps_input").val(newVal);
-    $(view.el).find("form").submit();
-    assert.equal( newVal, view.model.get("reps") );
-  })
+    assert(called,"remove not called")
+  });
 
-
-  test("event bus receives back when user clicks back",function() {
-    var mockedBus = sinon.mock(bus);
-    mockedBus.expects("trigger");
-
-    $(view.el).find(".back").click();
-
-    mockedBus.verify()
-  })
+});
 
 
-})
+
+
+
