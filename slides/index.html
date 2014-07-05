@@ -37,10 +37,6 @@ Grab code: <br> [github.com/timruffles/backbone-ga-class](http://github.com/timr
 - https://github.com/timruffles/backbone-ga-class
 - Code + slides up above - clone if you've got `git`, or grab the `.zip`.
 
-<p contenteditable>
-Wifi: hubwestminster/HubWest1
-</p>
-
 
 </script></section>
 
@@ -140,7 +136,7 @@ $(".update").on("submit",function() {
   if(errors) {
     return showErrors(errors)
   }
-  // persistence
+  // persistance
   $.ajax({
     url:'/exercises',
     type:"POST",
@@ -255,11 +251,11 @@ or 500 friends
 
 ```javascript
 var User = Backbone.Model.extend({
-  initialize: function() {
+  initialize: function(initialAttributes) {
     // our constructor, given args from constructor call
   },
   // instance properties
-  // available on instances
+  // avilable on instances
   login: function() {
   }
 },{
@@ -269,8 +265,8 @@ var User = Backbone.Model.extend({
 });
 
 User.maxAttempts // 3
-var user = new User
-user.login()
+var user = new User({name: "bob"});
+user.login();
 ```
 </script></section>
 
@@ -280,8 +276,8 @@ user.login()
 - rough version of what `extend` does
 
 ```javascript
-function User() {
-  Backbone.Model.call(this)
+function User(initialAttributes) {
+  Backbone.Model.call(this,initialAttributes)
   // where our `initialize()` code is run:
   // after Backbone has done its setup
 }
@@ -346,9 +342,9 @@ Exercise = Backbone.Model.extend({
   },
   validate: function(attrs) {
     var errors = []
-    attrs.sets = parseInt(attrs.sets)
-    if(attrs.sets > 20 || attrs.sets < 1) 
-      errors.push("sets must be between 1-20");
+    attrs.reps = parseInt(attrs.reps)
+    if(attrs.reps > 20 || attrs.reps < 1) 
+      errors.push("reps must be between 1-20");
     // etc ...
     if(errors.length > 0) {
       return "Exercise item invalid: " + 
@@ -364,7 +360,7 @@ Exercise = Backbone.Model.extend({
 
 Didn't have to:
 
-- specify fields (public var int sets, no thanks)
+- specify fields (public var int reps, no thanks)
 - specify setters/getters
 
 </script></section>
@@ -373,15 +369,15 @@ Didn't have to:
 
 ```javascript
 // set one, or many attributes
-model.set("sets",14)
-model.set({sets:12,reps:12})
+model.set("reps",14)
+model.set({reps:12,reps:12})
 
 // read attributes back
-model.get("sets") // 12
+model.get("reps") // 12
 
 // we get notified of all changes
-model.on("change:sets",function(model,sets) {
-  console.log("Sets changed to ",sets)
+model.on("change:reps",function(model,reps) {
+  console.log("reps changed to ",reps)
 })
 ```
 
@@ -418,17 +414,6 @@ var previousValue = model.previous("SOMETHING");
 
 
 </script></section>
-
-<section data-markdown ><script type="text/template">
-# Which entity?
-
-- Models are given a `cid` for client-side ID
-- They have an `id` for persistence ID
-- You can specify which attribute is used for ID
-
-</script></section>
-
-
 <section data-markdown ><script type="text/template">
 # Knowledge of domain
 
@@ -446,9 +431,9 @@ var previousValue = model.previous("SOMETHING");
 Exercise = Model.extend({
   validate: function(attrs) {
     var errors = []
-    attrs.sets = parseInt(attrs.sets)
-    if(attrs.sets > 20 || attrs.sets < 1) 
-      errors.push("sets must be between 1-20");
+    attrs.reps = parseInt(attrs.reps)
+    if(attrs.reps > 20 || attrs.reps < 1) 
+      errors.push("reps must be between 1-20");
     // etc ...
     if(errors.length > 0) {
       return "Exercise item invalid: " + 
@@ -476,7 +461,7 @@ Exercise = Model.extend({
 - Single point of truth - SPOT
 ```
 // will fail, no matter where it's called from
-exercise.set({sets:-10})
+exercise.set({reps:-10})
 ```
 
 
@@ -517,7 +502,7 @@ list.on("submit","form",function(evt) {
 
 ```javascript
 var MyCollection = Backbone.Collection.extend({
-  initialize: function(models,options) {
+  initialize: function(initialModels,options) {
   },
   model: MyModel // constructor for new models
 })
@@ -527,7 +512,7 @@ var aCollection = new MyCollection([
   new MyModel({foo: "bar"}) // existing models
 ],{
   // options
-} /*, additional args not touched by BB */)
+} /*, additonal args not touched by BB */)
 ```
 
 </script></section>
@@ -536,13 +521,17 @@ var aCollection = new MyCollection([
 # Basics
 
 ```javascript
+// create with initial models
 var myCollection = new MyCollection([
   {id: 1}
 ])
 
-var recordOne = myCollection.get(1)
+var recordOne = myCollection.get(1) // by id or cid
 
-myCollection.add([{id: 2}])
+// add many models at once
+myCollection.add([
+  {id: 2}
+])
 
 // set to update - default:
 // - adds new models
@@ -600,7 +589,7 @@ collection.on("add",function(model,collection,addOptions) {
 - Collections delegate all model events:
 
 ```javascript
-exerciseList.on("change:sets",
+exerciseList.on("change:reps",
   function(model,newValue,collection) {
     /* */
   });
@@ -628,7 +617,7 @@ var MyCollection = Backbone.Collection.extend({
 <section data-markdown ><script type="text/template">
 # Collections:
 
-- Convert objects to models using `Model` prototype property
+- Convert objects to models using `model` prototype property
 - Modified by `add`, `set`, `remove`
 - Can be kept in a certain order via comparator
 - Have all of underscore.js's great methods
@@ -668,8 +657,8 @@ collection.on("$EVENT_FROM_CONTAINED_MODEL")
 ```
 // triggering a custom named event
 this.on("change:id",function(id) {
-  // stick to Backbone's API: pass model!
-  this.trigger("loggedIn",id != null,this)
+  // stick to Backbone's API: pass model as first arg
+  this.trigger("loggedIn",this,id != null)
 },this);
 
 // consumers don't need to know how 
@@ -722,6 +711,8 @@ var ExerciseList = Backbone.View.extend({
     "click .remove": "remove",
     "submit #exercises form": "update",
     "submit": "create"
+  },
+  initialize: function(options) {
   }
 })
 ```
@@ -757,7 +748,7 @@ View.extend({
   className: "panel mobile", // class names for el
   tagName: "ul" /* type of element el will be,
    defaults to div */
-  attributes: { // attributes to set on el
+  attrs: { // attributes to set on el
     draggable: true
   }
 })
@@ -788,19 +779,20 @@ new ExerciseList({
 
 </script></section>
 <section data-markdown ><script type="text/template">
-# Don't do and assume
+# Don't do and then
 
-- Don't do and assume you know what happened
-- Define callbacks to hear about what happened
-- What happens when someone else changes the domain in the same way?
-- We would still want the `View` or other code to react in the same way.
+- Don't do and then, do and rely on defined callbacks
 
+- Don't manipulate model state like:
 ```
 team.addPlayer(player) // change state
 this.render() // update view
 ```
 
 
+- What happens when someone else changes the domain in the same way?
+
+- We would still want the `View` or other code to react in the same way.
 
 
 </script></section>
@@ -811,11 +803,11 @@ this.render() // update view
 
 ```
 ExerciseList = View.extend({
-  initialize: function() {
-    this.listenTo(this.collection,"add remove reset change",
-      this.render,this);
-    this.listenTo(this.collection,"error",this.error,this);
-  }
+  _.bindAll(this,"render","error");
+  this.listenTo(this.collection,"add remove reset change",
+    this.render);
+  this.listenTo(this.collection,"error",this.error);
+  this.render();
 })
 ```
 
@@ -831,8 +823,26 @@ ExerciseList = View.extend({
 ```
 SpaceInvadersRenderer = View.extend({
   initialize: function() {
+    _.bindAll(this,"render")
     this.ctx = this.el.getContext("2d");
     window.requestAnimationFrame(this.render);
+  }
+})
+```
+</script></section>
+
+<section data-markdown ><script type="text/template">
+# Sound
+```
+Sound = View.extend({
+  initialize: function(opts) {
+    /* assignment */
+    this.listenTo(this.match,"start",
+      this.play.bind(this,"whistle"))
+    this.listenTo(this.events,"foul",
+      this.randomGroan,this)
+    this.listenTo(this.events,"goal",
+      this.randomCheer,this)
   }
 })
 ```
@@ -844,18 +854,13 @@ SpaceInvadersRenderer = View.extend({
 ```
 var DataVizView = View.extend({
   render: function() {
-    d3.select(this.el)
+    d3.select(this)
       .selectAll(".point")
       .data(this.collection.toJSON())
       /* ... */
   }
 })
 ```
-</script></section>
-
-
-<section data-markdown ><script type="text/template">
-# Don't lose the benefits of an interface
 </script></section>
 
 
@@ -881,14 +886,12 @@ var DataVizView = View.extend({
 
 - A `render` function like that passes it to template
 ```
-var SomeView = Backbone.View.extend({
-  transform: function() {
-    return {some: this.model.get("data")};
-  },
-  render: function() {
-    this.el.innerHTML = Mustache.to_html(this.template,this.transform())
-  }
-});
+transform = function() {
+  // an object
+}
+render = function() {
+  this.el.innerHTML = Mustache.to_html(this.template,this.transform())
+}
 ```
 
 
@@ -921,30 +924,44 @@ Backbone.sync = function(method,model,options) {
 - Not limited to REST verbs - I've used keepUpdated for Pusher/Polling
 
 </script></section>
+<section data-markdown ><script type="text/template">
+# Switch on context
+```
+Model.extend({
+  sync: (method) {
+    if(method == "keepUpdated") {
+      Pusher.sync.apply(null,arguments);
+    } else {
+      Backbone.sync.apply(null,arguments);
+    }
+  }
+})
+```
 
+
+</script></section>
 <section data-markdown ><script type="text/template">
 # Overriding encouraged
 
 - Very simple to override - without legacy is ~10 lines of code.
 
-- Default is REST with all heavy lifting done by DOM library.
+- Default is REST with all heavy lifting done by AJAX library.
 
 
 </script></section>
-
 <section data-markdown ><script type="text/template">
 # Persists model
 ```
-model.fetch() // this.sync("read",model,options)
+model.fetch() // model.sync("read",model,options)
 
 // save method depends on model.isNew()
-// this.sync("create" || "update",model,{success,error})
+// model.sync("create" || "update",model,{success,error})
 model.save({someUpdate:"toAttributes"},{
   success: function() ...
   error: function()..
 })
 
-// this.sync("delete",model,options)
+// model.sync("delete",model,options)
 model.destroy()
 ```
 
@@ -953,33 +970,17 @@ model.destroy()
 <section data-markdown ><script type="text/template">
 # And Collection
 ```
-// same as model.save() on new model
-collection.create(attributes,{
+// same as `model = new Model(attrs); model.save()`
+collection.create(attrs,{
   wait: true // don't add to collection till server OKs
 })
 
-// Backbone.sync("read",collection,options)
+// collection.sync("read",collection,options)
 collection.fetch()
 ```
 
 
 </script></section>
-
-<section data-markdown ><script type="text/template">
-# Switch on context
-```
-Model.extend({
-  sync: function(method) {
-    if(method == "keepUpdated") {
-      Pusher.sync.apply(Pusher,arguments);
-    } else {
-      Backbone.sync.apply(Backbone,arguments);
-    }
-  }
-})
-```
-</script></section>
-
 <section data-markdown ><script type="text/template">
 # Sync summary
 - Keep all persistance implementation here
@@ -1017,11 +1018,9 @@ Model.extend({
 <section data-markdown ><script type="text/template">
 # Role of router
 
-- Avoid overdependence on router
-
-- One pattern I've used is an App `ViewModel` - simply using a model to represent the state of your view.
-
-- With `ViewModel` pattern, `Router` is one input to view state - commands or loaded data could be another
+- Avoid "god object router"
+- Have a hierarchy of routers if it gets too big
+- For bigger apps, listen to `route` events in views rather than create views from router
 
 
 </script></section>
@@ -1029,7 +1028,6 @@ Model.extend({
 # Router summary
 - Simple routing via hashChange or pushState
 - Routes urls and fires callbacks, with extracted params
-- Consider use case
 
 </script></section>
 
@@ -1209,6 +1207,7 @@ var model = new OuterModel({
 - e.g Date, Period, Interval, Query
 - Don't change individual fields, change whole objects
 - If you're listening for lots of fields on a model & doing same thing, it could be a VO
+- If you can't ask "which one?" (e.g 'which July 4th, 1987?') it's a VO
 
 </script></section>
 
